@@ -69,6 +69,10 @@ public class TSPSolver {
 	 */
 	public void solve() throws Exception
 	{
+		
+		for(int k=0;k<this.getInstance().getNbCities();k++) {
+			this.getSolution().setCityPosition(k,k);
+		}
 		m_solution.print(System.err);
 		
 		// Example of a time loop
