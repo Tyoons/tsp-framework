@@ -9,8 +9,6 @@ import java.util.Arrays;
  * 
  * **Internal structure of the class:**
  * 
- * Bonjour je suis Valentin ceci est une erreur
- * 
  * This solution itself is stored in the array #m_cities.
  *
  * #m_cities[i] should be the index of the element at index i in the solution.
