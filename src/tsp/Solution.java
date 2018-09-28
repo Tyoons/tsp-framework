@@ -7,6 +7,8 @@ import java.util.Arrays;
  * 
  * This class models a TSP Solution.
  * 
+ * mes couilles
+ * 
  * **Internal structure of the class:**
  * 
  * This solution itself is stored in the array #m_cities.
