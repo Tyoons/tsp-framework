@@ -69,9 +69,16 @@ public class TSPSolver {
 	 */
 	public void solve() throws Exception
 	{
+<<<<<<< HEAD
 		for(int i=0;i<this.getInstance().getNbCities();i++){ 
 			this.getSolution().setCityPosition(i,i);
 		   } 
+=======
+		
+		for(int k=0;k<this.getInstance().getNbCities();k++) {
+			this.getSolution().setCityPosition(k,k);
+		}
+>>>>>>> branch 'master' of https://github.com/Tyoons/tsp-framework.git
 		m_solution.print(System.err);
 		// Example of a time loop
 		long startTime = System.currentTimeMillis();
