@@ -22,8 +22,14 @@ public class Genetic extends TSPSolver{
 		super(instance, timeLimit);
 	}
 	
+	/** On choisit le nombre d'individu */
+	private static int nbIndividus = 100;
 	
-	public void getSolutionGene() throws Exception {
+		// -----------------------------
+		// ----- Initialization --------
+		// -----------------------------
+	
+	public void getInitGene() throws Exception {
 		int nbVilles = this.getInstance().getNbCities();
 	
 		/* On initialise la liste des villes deja  visitees */ 
@@ -57,12 +63,98 @@ public class Genetic extends TSPSolver{
 			this.getSolution().setCityPosition(i, indice); // On l'ajoute a la solution
 			i++;
 		}
+	}
+		
+		// -----------------------------
+		// -- Creation des N individu --
+		// -----------------------------
+		
+		/** On creer N individu à partir de l'initialisation */
+		
+		public Solution[] creationPopulation() {
+			Solution[] population = new Solution[nbIndividus];
+			for (int i=0;i<nbIndividus;i++) {
+				population[i] = this.getSolution();
+			}
+			return population;
+		}
+	
 		
 		
+		// -----------------------------
+		// ---- Melange genetique ------
+		// -----------------------------
+	
+		public static Solution[] iterationGene(Solution[] parents, int nbSwap) throws Exception {
+			Solution[] offspring = new Solution[nbIndividus];
+			Solution[] famille = new Solution[2*nbIndividus];
+			long[] valeurs = new long[2*nbIndividus];
+			
+			/** On prepare la famille */
+			for (int i = 0;i<nbIndividus;i++) {
+				famille[i] = parents[i];
+				famille[i+nbIndividus] = parents[i];
+			}
+			
+			for (int i = nbIndividus;i<2*nbIndividus;i++) {
+				for (int j=0;j<nbSwap;j++) {
+					int indiceSwap1 = nbIndividus + (int)(Math.random() * (nbIndividus + 1));
+					int indiceSwap2 = nbIndividus + (int)(Math.random() * (nbIndividus + 1));
+					int ville1 = famille[i].getCity(indiceSwap1);
+					int ville2 = famille[i].getCity(indiceSwap2);
+					famille[i].setCityPosition(ville2, indiceSwap1);
+					famille[i].setCityPosition(ville1, indiceSwap2);
+				}
+			}
+			
+			for (int i=0;i<2*nbIndividus;i++) {
+				valeurs[i] = famille[i].getObjectiveValue();
+			}
+			
+			for (int i=0;i<2*nbIndividus;i++) {
+				long tempL;
+				Solution tempS;
+				for (int j=0;i<2*nbIndividus-i-1;i++) {
+					if (valeurs[j]>valeurs[j+1]) {
+						tempL= valeurs[j];
+						valeurs[j] = valeurs[j+1];
+						valeurs[j+1] = tempL;
+						tempS = famille[j];
+						famille[j] = famille[j+1];
+						famille[j+1] = tempS;
+					}
+				}
+			}
+			
+			for (int i = 0;i<nbIndividus;i++) {
+				offspring[i] = famille[i];
+			}
+			
+			return offspring;
+		}
+		
+		
+		// -----------------------------
+		// -----------------------------
+		// -----------------------------
+		
+	/** Fonction pour obtenir la meilleure solution dans une liste */
+	
+	private static Solution getMeilleurSol(Solution[] population) {
+		long min = population[0].getObjectiveValue();
+		Solution resultat = population[0];
+		for (int i=1;i<population.length;i++) {
+			if (population[i].getObjectiveValue() < min) {
+				min = population[i].getObjectiveValue();
+				resultat = population[i];
+			}
+		}
+		return resultat;
 	}
 	
-	/* Fonction pour tester si un entier est dans un tableau */
-	public static boolean testInt(int element,int[] tableau) {
+	/** Fonction pour tester si un entier est dans un tableau */
+		
+	private static boolean testInt(int element,int[] tableau) {
 		boolean in = false;
 		int i = 0;
 		while (i<tableau.length && in == false) {

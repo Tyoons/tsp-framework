@@ -1,4 +1,5 @@
 package tsp;
+import jdk.nashorn.internal.runtime.arrays.IteratorAction;
 import tsp.metaheuristic.Genetic;;
 /**
  * 
@@ -76,8 +77,13 @@ public class TSPSolver {
 		*/
 		
 		Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
-		initialisation.getSolutionGene();
-		this.m_solution=initialisation.getSolution();
+		initialisation.getInitGene();
+		Solution[] population = initialisation.creationPopulation();
+		for (int i=0;i<1000;i++) {
+			population = Genetic.iterationGene(population, 3);
+		}
+		this.m_solution=population[0];
+		//this.m_solution=initialisation.getSolution();
 		
 		m_solution.print(System.err);
 		// Example of a time loop
