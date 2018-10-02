@@ -1,5 +1,5 @@
 package tsp;
-import tsp.metaheuristic.*;
+import tsp.metaheuristic.InitialisationGene;;
 /**
  * 
  * This class is the place where you should enter your code and from which you can create your own objects.
@@ -69,9 +69,16 @@ public class TSPSolver {
 	 */
 	public void solve() throws Exception
 	{
+		/*
 		for(int i=0;i<this.getInstance().getNbCities();i++){ 
 			this.getSolution().setCityPosition(i,i);
-		   } 
+		} 
+		*/
+		
+		InitialisationGene initialisation = new InitialisationGene(this.getInstance(),this.getTimeLimit());
+		initialisation.getSolutionGene();
+		this.m_solution=initialisation.getSolution();
+		
 		m_solution.print(System.err);
 		// Example of a time loop
 		long startTime = System.currentTimeMillis();
