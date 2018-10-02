@@ -4,7 +4,7 @@ import java.util.List;
 
 import tsp.*;
 
-public class InitialisationGene extends TSPSolver{
+public class Genetic extends TSPSolver{
 	
 	/**
 	 * The Solution that will be returned by the program.
@@ -18,7 +18,7 @@ public class InitialisationGene extends TSPSolver{
 	private long m_timeLimit;
 	
 	/** Initalise l'instance */
-	public InitialisationGene(Instance instance, long timeLimit) {
+	public Genetic(Instance instance, long timeLimit) {
 		super(instance, timeLimit);
 	}
 	
@@ -26,10 +26,10 @@ public class InitialisationGene extends TSPSolver{
 	public void getSolutionGene() throws Exception {
 		int nbVilles = this.getInstance().getNbCities();
 	
-		/* On initialise la liste des villes d√©j√† visit√©es */ 
+		/* On initialise la liste des villes deja† visitees */ 
 		int[] visite = new int[nbVilles];
 		
-		/* On initialise les √©l√©ments de cette liste */
+		/* On initialise les elements de cette liste */
 		visite[0]=0;
 		visite[nbVilles-1] = -1;
 
@@ -37,24 +37,24 @@ public class InitialisationGene extends TSPSolver{
 		/* On prend arbitrairement comme ville de d√©part la ville 0 */
 		this.getSolution().setCityPosition(0, 0);
 		
-		/* i sera la variable des it√©rations */
+		/* i sera la variable des iterations */
 		int i = 1;
 		
+		/* On boucle tant que toutes les villes n'ont pas ÈtÈ visitÈe*/
 		while(visite[nbVilles-1] == -1) {
-			long[] voisins = new long[nbVilles-1];
-			voisins = this.getInstance().getDistances()[i];
-			voisins[i] = 150000;
+			long[] voisins = new long[nbVilles-1]; // La liste des voisins de notre ville
+			voisins = this.getInstance().getDistances()[i]; // On rÈcupËre les distances entre la ville et ses voisins
+			voisins[i] = 150000; // On set la distance de notre ville a inf (0 a la base)
 			long min = 150000;
-			int indice = i;
-			for (int j=0;j<nbVilles-1;j++) {
-				if (!testInt(j, visite) && voisins[j]<min) {
-					min = voisins[j];
+			int indice = i; // Indice qui servira ‡ trouver le min
+			for (int j=0;j<nbVilles-1;j++) { // On test tous les voisins 
+				if (!testInt(j, visite) && voisins[j]<min) { // Si le sommet j n'a pas dÈj‡ ÈtÈ visitÈ et que sa distance est < a notre min
+					min = voisins[j]; 
 					indice = j;
 				}
 			}
-			visite[i]=indice;
-			//System.out.println(i);
-			this.getSolution().setCityPosition(i, indice);
+			visite[i]=indice; // On ajoute le sommet min aux sommets visitÈ
+			this.getSolution().setCityPosition(i, indice); // On l'ajoute a la solution
 			i++;
 		}
 		

@@ -1,5 +1,5 @@
 package tsp;
-import tsp.metaheuristic.InitialisationGene;;
+import tsp.metaheuristic.Genetic;;
 /**
  * 
  * This class is the place where you should enter your code and from which you can create your own objects.
@@ -75,7 +75,7 @@ public class TSPSolver {
 		} 
 		*/
 		
-		InitialisationGene initialisation = new InitialisationGene(this.getInstance(),this.getTimeLimit());
+		Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
 		initialisation.getSolutionGene();
 		this.m_solution=initialisation.getSolution();
 		
