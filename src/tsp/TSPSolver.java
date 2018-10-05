@@ -70,20 +70,25 @@ public class TSPSolver {
 	 */
 	public void solve() throws Exception
 	{
-		/*
-		for(int i=0;i<this.getInstance().getNbCities();i++){ 
+		
+		/*for(int i=0;i<this.getInstance().getNbCities();i++){ 
 			this.getSolution().setCityPosition(i,i);
 		} 
-		*/
+		this.m_solution.evaluate();*/
 		
 		Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
 		initialisation.getInitGene();
+		
+		/*
 		Solution[] population = initialisation.creationPopulation();
-		for (int i=0;i<1000;i++) {
-			population = Genetic.iterationGene(population, 3);
+		for (int i=0;i<100;i++) {
+			population = Genetic.iterationGene(population, 2);
 		}
-		this.m_solution=population[0];
-		//this.m_solution=initialisation.getSolution();
+		this.m_solution = population[49];
+		
+		this.m_solution.evaluate();*/
+		
+		this.m_solution=initialisation.getSolution();
 		
 		m_solution.print(System.err);
 		// Example of a time loop

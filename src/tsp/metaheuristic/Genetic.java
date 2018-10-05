@@ -23,7 +23,7 @@ public class Genetic extends TSPSolver{
 	}
 	
 	/** On choisit le nombre d'individu */
-	private static int nbIndividus = 100;
+	private static int nbIndividus = 50;
 	
 		// -----------------------------
 		// ----- Initialization --------
@@ -32,7 +32,7 @@ public class Genetic extends TSPSolver{
 	public void getInitGene() throws Exception {
 		int nbVilles = this.getInstance().getNbCities();
 	
-		/* On initialise la liste des villes deja  visitees */ 
+		/* On initialise la liste des villes dejaï¿½ visitees */ 
 		int[] visite = new int[nbVilles];
 		
 		/* On initialise les elements de cette liste */
@@ -46,20 +46,20 @@ public class Genetic extends TSPSolver{
 		/* i sera la variable des iterations */
 		int i = 1;
 		
-		/* On boucle tant que toutes les villes n'ont pas été visitée*/
+		/* On boucle tant que toutes les villes n'ont pas ï¿½tï¿½ visitï¿½e*/
 		while(visite[nbVilles-1] == -1) {
 			long[] voisins = new long[nbVilles-1]; // La liste des voisins de notre ville
-			voisins = this.getInstance().getDistances()[i]; // On récupère les distances entre la ville et ses voisins
+			voisins = this.getInstance().getDistances()[i]; // On rï¿½cupï¿½re les distances entre la ville et ses voisins
 			voisins[i] = 150000; // On set la distance de notre ville a inf (0 a la base)
 			long min = 150000;
-			int indice = i; // Indice qui servira à trouver le min
+			int indice = i; // Indice qui servira ï¿½ trouver le min
 			for (int j=0;j<nbVilles-1;j++) { // On test tous les voisins 
-				if (!testInt(j, visite) && voisins[j]<min) { // Si le sommet j n'a pas déjà été visité et que sa distance est < a notre min
+				if (!testInt(j, visite) && voisins[j]<min) { // Si le sommet j n'a pas dï¿½jï¿½ ï¿½tï¿½ visitï¿½ et que sa distance est < a notre min
 					min = voisins[j]; 
 					indice = j;
 				}
 			}
-			visite[i]=indice; // On ajoute le sommet min aux sommets visité
+			visite[i]=indice; // On ajoute le sommet min aux sommets visitï¿½
 			this.getSolution().setCityPosition(i, indice); // On l'ajoute a la solution
 			i++;
 		}
@@ -69,7 +69,7 @@ public class Genetic extends TSPSolver{
 		// -- Creation des N individu --
 		// -----------------------------
 		
-		/** On creer N individu à partir de l'initialisation */
+		/** On creer N individu ï¿½ partir de l'initialisation */
 		
 		public Solution[] creationPopulation() {
 			Solution[] population = new Solution[nbIndividus];
@@ -78,8 +78,27 @@ public class Genetic extends TSPSolver{
 			}
 			return population;
 		}
-	
 		
+		
+		// -----------------------------
+		// -- Creation des N individu --  Aleatoire
+		// -----------------------------
+	
+		public Solution[] creationPopulationAleatoire() throws Exception {
+			int nbVilles = this.getInstance().getNbCities();
+			Solution[] resultat = new Solution[nbIndividus];
+			for (int i=0;i<nbIndividus;i++) {
+				resultat[i].setCityPosition(0, 0);
+				
+				/* Tableau des villes */
+				int[] villes = new int[nbVilles];
+				for (int j=1;j<this.getInstance().getNbCities();j++) {
+				}
+				
+				
+			}
+			return resultat;
+		}
 		
 		// -----------------------------
 		// ---- Melange genetique ------
@@ -88,7 +107,8 @@ public class Genetic extends TSPSolver{
 		public static Solution[] iterationGene(Solution[] parents, int nbSwap) throws Exception {
 			Solution[] offspring = new Solution[nbIndividus];
 			Solution[] famille = new Solution[2*nbIndividus];
-			long[] valeurs = new long[2*nbIndividus];
+			double[] valeurs = new double[2*nbIndividus];
+			int nbVilles = parents[0].getInstance().getNbCities();
 			
 			/** On prepare la famille */
 			for (int i = 0;i<nbIndividus;i++) {
@@ -96,10 +116,11 @@ public class Genetic extends TSPSolver{
 				famille[i+nbIndividus] = parents[i];
 			}
 			
+			
 			for (int i = nbIndividus;i<2*nbIndividus;i++) {
+				int indiceSwap1 = 1 + (int)(Math.random() *(nbVilles - 1));
+				int indiceSwap2 = 1 + (int)(Math.random() *(nbVilles - 1));
 				for (int j=0;j<nbSwap;j++) {
-					int indiceSwap1 = nbIndividus + (int)(Math.random() * (nbIndividus + 1));
-					int indiceSwap2 = nbIndividus + (int)(Math.random() * (nbIndividus + 1));
 					int ville1 = famille[i].getCity(indiceSwap1);
 					int ville2 = famille[i].getCity(indiceSwap2);
 					famille[i].setCityPosition(ville2, indiceSwap1);
@@ -107,14 +128,20 @@ public class Genetic extends TSPSolver{
 				}
 			}
 			
-			for (int i=0;i<2*nbIndividus;i++) {
-				valeurs[i] = famille[i].getObjectiveValue();
-			}
+			
 			
 			for (int i=0;i<2*nbIndividus;i++) {
-				long tempL;
+				valeurs[i] = famille[i].evaluate();
+			}
+			
+			
+			/** On tri la liste des valeurs et des solution 
+			 * en fonction de la valeur objective de la solution.
+			*/
+			for (int i=0;i<2*nbIndividus;i++) {
+				double tempL;
 				Solution tempS;
-				for (int j=0;i<2*nbIndividus-i-1;i++) {
+				for (int j=0;j<2*nbIndividus-i-1;j++) {
 					if (valeurs[j]>valeurs[j+1]) {
 						tempL= valeurs[j];
 						valeurs[j] = valeurs[j+1];
@@ -124,7 +151,10 @@ public class Genetic extends TSPSolver{
 						famille[j+1] = tempS;
 					}
 				}
+				
 			}
+			
+			//System.out.println(valeurs[nbIndividus+1]);
 			
 			for (int i = 0;i<nbIndividus;i++) {
 				offspring[i] = famille[i];
