@@ -2,6 +2,8 @@ package tsp.metaheuristic;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import tsp.*;
 
 public class Genetic extends TSPSolver{
@@ -23,7 +25,7 @@ public class Genetic extends TSPSolver{
 	}
 	
 	/** On choisit le nombre d'individu */
-	private static int nbIndividus = 50;
+	private static int nbIndividus = 100;
 	
 		// -----------------------------
 		// ----- Initialization --------
@@ -64,7 +66,15 @@ public class Genetic extends TSPSolver{
 			i++;
 		}
 	}
-		
+	// -----------------------------
+	// ----- InitializationB --------
+	// -----------------------------
+	public void getInitGeneB() throws Exception {
+		for(int i=0;i<this.getInstance().getNbCities();i++){ 
+			this.getSolution().setCityPosition(i,i);
+		} 
+	}
+	
 		// -----------------------------
 		// -- Creation des N individu --
 		// -----------------------------
@@ -84,21 +94,26 @@ public class Genetic extends TSPSolver{
 		// -- Creation des N individu --  Aleatoire
 		// -----------------------------
 	
-		public Solution[] creationPopulationAleatoire() throws Exception {
+		/*public Solution[] creationPopulationAleatoire() throws Exception {
 			int nbVilles = this.getInstance().getNbCities();
 			Solution[] resultat = new Solution[nbIndividus];
 			for (int i=0;i<nbIndividus;i++) {
 				resultat[i].setCityPosition(0, 0);
-				
-				/* Tableau des villes */
+				/* Tableau des villes 
 				int[] villes = new int[nbVilles];
-				for (int j=1;j<this.getInstance().getNbCities();j++) {
+				for (int j=0;j<nbVilles;j++) {
+					villes[j]=j;
+				}
+				for (int j=0;j<nbVilles+1;j++) {
+					int alea = 1 + (int)(Math.random() *(nbVilles-1-j));
 				}
 				
 				
 			}
 			return resultat;
-		}
+			}
+			*/
+		
 		
 		// -----------------------------
 		// ---- Melange genetique ------
@@ -112,19 +127,23 @@ public class Genetic extends TSPSolver{
 			
 			/** On prepare la famille */
 			for (int i = 0;i<nbIndividus;i++) {
-				famille[i] = parents[i];
-				famille[i+nbIndividus] = parents[i];
+				famille[i] = parents[i].copy();
+				famille[i+nbIndividus] = parents[i].copy();
 			}
 			
 			
 			for (int i = nbIndividus;i<2*nbIndividus;i++) {
 				int indiceSwap1 = 1 + (int)(Math.random() *(nbVilles - 1));
 				int indiceSwap2 = 1 + (int)(Math.random() *(nbVilles - 1));
-				for (int j=0;j<nbSwap;j++) {
+				for (int j=0;j<nbSwap-1;j++) {
+					/*System.out.print("AvantSwap");
+					System.out.println(famille[i].evaluate());*/
 					int ville1 = famille[i].getCity(indiceSwap1);
 					int ville2 = famille[i].getCity(indiceSwap2);
 					famille[i].setCityPosition(ville2, indiceSwap1);
 					famille[i].setCityPosition(ville1, indiceSwap2);
+					/*System.out.print("ApresSwap");
+					System.out.println(famille[i].evaluate());*/
 				}
 			}
 			
@@ -133,6 +152,7 @@ public class Genetic extends TSPSolver{
 			for (int i=0;i<2*nbIndividus;i++) {
 				valeurs[i] = famille[i].evaluate();
 			}
+			//printTableau(valeurs);
 			
 			
 			/** On tri la liste des valeurs et des solution 
@@ -153,8 +173,8 @@ public class Genetic extends TSPSolver{
 				}
 				
 			}
+			//printTableau(valeurs);
 			
-			//System.out.println(valeurs[nbIndividus+1]);
 			
 			for (int i = 0;i<nbIndividus;i++) {
 				offspring[i] = famille[i];
@@ -165,7 +185,7 @@ public class Genetic extends TSPSolver{
 		
 		
 		// -----------------------------
-		// -----------------------------
+		// -----------------------------   Fonction annexes
 		// -----------------------------
 		
 	/** Fonction pour obtenir la meilleure solution dans une liste */
@@ -182,6 +202,17 @@ public class Genetic extends TSPSolver{
 		return resultat;
 	}
 	
+	
+	/** Fonction pour mettre un tableau en string */
+	
+	private static void printTableau(double[] tab) {
+		String s = "{";
+		for (int i=0;i<tab.length-1;i++) {
+			s+=tab[i]+",";
+		}
+		s+=tab[tab.length-1]+"}";
+		System.out.println(s);
+	}
 	/** Fonction pour tester si un entier est dans un tableau */
 		
 	private static boolean testInt(int element,int[] tableau) {
