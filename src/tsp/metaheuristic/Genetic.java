@@ -66,14 +66,6 @@ public class Genetic extends TSPSolver{
 			i++;
 		}
 	}
-	// -----------------------------
-	// ----- InitializationB --------
-	// -----------------------------
-	public void getInitGeneB() throws Exception {
-		for(int i=0;i<this.getInstance().getNbCities();i++){ 
-			this.getSolution().setCityPosition(i,i);
-		} 
-	}
 	
 		// -----------------------------
 		// -- Creation des N individu --
@@ -89,37 +81,11 @@ public class Genetic extends TSPSolver{
 			return population;
 		}
 		
-		
-		// -----------------------------
-		// -- Creation des N individu --  Aleatoire
-		// -----------------------------
-	
-		/*public Solution[] creationPopulationAleatoire() throws Exception {
-			int nbVilles = this.getInstance().getNbCities();
-			Solution[] resultat = new Solution[nbIndividus];
-			for (int i=0;i<nbIndividus;i++) {
-				resultat[i].setCityPosition(0, 0);
-				/* Tableau des villes 
-				int[] villes = new int[nbVilles];
-				for (int j=0;j<nbVilles;j++) {
-					villes[j]=j;
-				}
-				for (int j=0;j<nbVilles+1;j++) {
-					int alea = 1 + (int)(Math.random() *(nbVilles-1-j));
-				}
-				
-				
-			}
-			return resultat;
-			}
-			*/
-		
-		
 		// -----------------------------
 		// ---- Melange genetique ------
 		// -----------------------------
 	
-		public static Solution[] iterationGene(Solution[] parents, int nbSwap) throws Exception {
+		public static Solution[] iterationGene(Solution[] parents) throws Exception {
 			Solution[] offspring = new Solution[nbIndividus];
 			Solution[] famille = new Solution[2*nbIndividus];
 			double[] valeurs = new double[2*nbIndividus];
@@ -131,11 +97,11 @@ public class Genetic extends TSPSolver{
 				famille[i+nbIndividus] = parents[i].copy();
 			}
 			
-			
+			/** On effectue la mutation en échangeant 2 individus quelconque */
 			for (int i = nbIndividus;i<2*nbIndividus;i++) {
 				int indiceSwap1 = 1 + (int)(Math.random() *(nbVilles - 1));
 				int indiceSwap2 = 1 + (int)(Math.random() *(nbVilles - 1));
-				for (int j=0;j<nbSwap-1;j++) {
+				if (indiceSwap1!=indiceSwap2) {
 					/*System.out.print("AvantSwap");
 					System.out.println(famille[i].evaluate());*/
 					int ville1 = famille[i].getCity(indiceSwap1);
@@ -148,7 +114,7 @@ public class Genetic extends TSPSolver{
 			}
 			
 			
-			
+			/** On écalue chaque individus de la famille */
 			for (int i=0;i<2*nbIndividus;i++) {
 				valeurs[i] = famille[i].evaluate();
 			}
@@ -175,7 +141,7 @@ public class Genetic extends TSPSolver{
 			}
 			//printTableau(valeurs);
 			
-			
+			/** On prend les meilleurs solutions */
 			for (int i = 0;i<nbIndividus;i++) {
 				offspring[i] = famille[i];
 			}
@@ -185,7 +151,77 @@ public class Genetic extends TSPSolver{
 		
 		
 		// -----------------------------
-		// -----------------------------   Fonction annexes
+		// -- Melange genetique 3 OPT --
+		// -----------------------------
+		
+		public static Solution[] iterationGene2OPT(Solution[] parents) throws Exception {
+			Solution[] offspring = new Solution[nbIndividus];
+			Solution[] famille = new Solution[2*nbIndividus];
+			double[] valeurs = new double[2*nbIndividus];
+			int nbVilles = parents[0].getInstance().getNbCities();
+			
+			/** On prepare la famille */
+			for (int i = 0;i<nbIndividus;i++) {
+				famille[i] = parents[i].copy();
+				famille[i+nbIndividus] = parents[i].copy();
+			}
+			
+			/** On effectue le swap pour 3 individus **/
+			for (int i = nbIndividus;i<2*nbIndividus;i++) {
+				int indiceSwap1 = 1 + (int)(Math.random() *(nbVilles - 1 - 4));
+				int indiceSwap2 = indiceSwap1 + 1;
+				int indiceSwap3 = indiceSwap1 + 2;
+				int indiceSwap4 = indiceSwap1 + 3;
+				if (indiceSwap1!=indiceSwap2 && indiceSwap1!=indiceSwap3 && indiceSwap2!=indiceSwap3) {
+					/*System.out.print("AvantSwap");
+					System.out.println(famille[i].evaluate());*/
+					int ville2 = famille[i].getCity(indiceSwap2%nbVilles);
+					int ville3 = famille[i].getCity(indiceSwap3%nbVilles);
+					famille[i].setCityPosition(ville2, indiceSwap3%nbVilles);
+					famille[i].setCityPosition(ville3, indiceSwap2%nbVilles);
+					/*System.out.print("ApresSwap");
+					System.out.println(famille[i].evaluate());*/
+				}
+			}
+			
+			
+			/** On évalue la famille**/
+			for (int i=0;i<2*nbIndividus;i++) {
+				valeurs[i] = famille[i].evaluate();
+			}
+			//printTableau(valeurs);
+			
+			
+			/** On tri la liste des valeurs et des solution 
+			 * en fonction de la valeur objective de la solution.
+			*/
+			for (int i=0;i<2*nbIndividus;i++) {
+				double tempL;
+				Solution tempS;
+				for (int j=0;j<2*nbIndividus-i-1;j++) {
+					if (valeurs[j]>valeurs[j+1]) {
+						tempL= valeurs[j];
+						valeurs[j] = valeurs[j+1];
+						valeurs[j+1] = tempL;
+						tempS = famille[j];
+						famille[j] = famille[j+1];
+						famille[j+1] = tempS;
+					}
+				}
+				
+			}
+			//printTableau(valeurs);
+			
+			/** On prend les meilleurs solutions */
+			for (int i = 0;i<nbIndividus;i++) {
+				offspring[i] = famille[i];
+			}
+			
+			return offspring;
+		}
+		
+		// -----------------------------
+		// -------Fonction annexes------   
 		// -----------------------------
 		
 	/** Fonction pour obtenir la meilleure solution dans une liste */

@@ -83,8 +83,8 @@ public class TSPSolver {
 	//Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
 	//initialisation.getInitGeneB();
 	Solution[] population = initialisation.creationPopulation();
-	for (int i=0;i<1000;i++) {
-		population = Genetic.iterationGene(population, 2);
+	for (int i=0;i<500;i++) {
+		population = Genetic.iterationGene2OPT(population);
 	}
 	this.m_solution = population[0];
 	
