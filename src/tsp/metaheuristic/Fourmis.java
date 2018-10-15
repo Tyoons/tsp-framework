@@ -10,8 +10,18 @@ public class Fourmis extends TSPSolver{
 
  
    public Fourmis(Instance instance, long timeLimit) {
-		super(instance, timeLimit);
-		// TODO Auto-generated constructor stub
+		 super(instance, timeLimit);
+		 int n=this.getInstance().getNbCities();
+		 this.VillesPasEncoreVisitées=new ArrayList<Integer>(n);
+		 this.VillesVisitées=new ArrayList<Integer>(n);	
+		 for (int init=0;init<n;init++) {
+			 this.VillesPasEncoreVisitées.add(init);
+		 }
+		 this.TempsDeParcours=0;
+		 this.EtatFourmi=0;
+		 this.borneMin=0;
+		 this.evaporation=(float) 0.2;
+		 this.pheromones=new float[n][n];
 	}
 
    private List<Integer> VillesVisitées;        // toutes les villes visitées par la fourmi
@@ -22,15 +32,11 @@ public class Fourmis extends TSPSolver{
    private int VilleDestination;
    private long PositionSurArcActuel;
    private long LongueurArcActuel;
-   private float[][] pheromones;
-   private float evaporation;
-   private float borneMin;
+   public float[][] pheromones;
+   public float evaporation;
+   public float borneMin;
    
-   
-
-   public Fourmis(Instance instance, long timeLimit) {
-	   this.VillesPasEncoreVisitées=this.getInstance().getNbCities()[]
-}
+ 
 
 public void findNextSearchDestination() throws Exception { // détermination du prochain nœud à atteindre
 	   switch(EtatFourmi){
@@ -74,10 +80,8 @@ public void findNextSearchDestination() throws Exception { // détermination du 
                 this.pheromones[this.VillesVisitées.get(VilleOrigine)][this.VillesVisitées.get(VilleDestination)]= this.TempsDeParcours;
  
                 // sauver le résultat, changer de fourmi
-              /*  antException e;
-                e.a = this;
-                e.state = antException::TO_REGISTER;
-                throw e;*/ //jsp comment on fait ça!
+                Exception e=new Exception("Enregistre");
+                throw e;
             }
  
             // trouver la ville précédemment visitée et la passer en destination
@@ -111,7 +115,7 @@ public void findNextSearchDestination() throws Exception { // détermination du 
 	    }
    }
 
-private int getNearCity(int i) {
+private int getNearCity(int i) throws Exception {
 	    // hasard sur les chemins restants, pondérés par les phéromones
 	float TaillePheromone = 0;          
 	for (int k = 0; k < this.VillesPasEncoreVisitées.size(); k++){
@@ -136,10 +140,8 @@ private int getNearCity(int i) {
 		}
 	    if (j == this.VillesPasEncoreVisitées.size()){
 	        // aucune solution acceptable, détruire la fourmi courante
-	        /*antException e;
-	        e.a = this;
-	        e.state = antException::TO_DELETE;
-	        throw e;*/
+	        Exception e=new Exception("Effacer");
+	        throw e;
 	    }
 	}
 	return this.VillesPasEncoreVisitées.get(j);
@@ -156,35 +158,41 @@ public void evaporate(){
         }
 }
 
-public static Solution[] Solution(int NombreFourmis) {
+public Solution[] Solution(int NombreFourmis,Instance instance) throws Exception {
+	 Solution[] s= new Solution[NombreFourmis];
+	 double[] temps=new double[NombreFourmis];
 	 for (int i=0; i<NombreFourmis; i++){// pour chaque fourmi
-		 Fourmis f=new Fourmis();
-	        std::list<ant*>::iterator it = ants.begin();
-	        while (it != ants.end()){
-	            try{
-	                 (*it)->frame();
-	            }catch(antException &e){
-	                if (e.state == antException::TO_REGISTER)
-	                    notifySolution(e.a->tmpVisitedLength, e.a->visitedCities);    
-	 
-	                if(bestLength <= data.optimalLength)
-	                     return;              
-	 
-	                // on crée une nouvelle fourmi pour remplacer la fourmi courante
-	                *it = new ant(data);     
-	                delete e.a;                                         
-	            }
-	            it++;
-	        }       
+		 Fourmis f=new Fourmis(instance, 100000000);
+		 while(true) {
+			 try {
+				 f.frame();
+			 }catch(Exception e) {
+				 if(e.getMessage().equals("Effacer")) { 
+					 s[i]=null;
+					 temps[i]=100000000;
+				 }
+				 else {
+					 if(e.getMessage().equals("Enregistre")) {
+						 Solution sol=new Solution(instance);
+						 for(int k=0;k<f.VillesVisitées.size()-1;k++) {
+							 sol.setCityPosition(f.VillesVisitées.get(k), f.VillesVisitées.get(k+1));
+						 }
+						 sol.setCityPosition(f.VillesVisitées.get(f.VillesVisitées.size()),0);
+						 s[i]=sol;
+						 temps[i]=s[i].evaluate();
+					 }
+				 }
+			 }
+		 }
+	 }
 	 
 	        // on évapore les phéromones toutes les 20 itérations
 	        // juste histoire de ne pas monopoliser toutes les ressources pour ça
-	        if (i % 20 == 0)
+	   /*     if (i % 20 == 0)
 	            evaporate(); 
 	    }
-
-	return null;
+*/	//System.out.println(temps);
+	return s;
 	
 }
-
 }

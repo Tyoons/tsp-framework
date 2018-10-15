@@ -1,5 +1,6 @@
 package tsp;
 import jdk.nashorn.internal.runtime.arrays.IteratorAction;
+import tsp.metaheuristic.Fourmis;
 import tsp.metaheuristic.Genetic;;
 /**
  * 
@@ -74,7 +75,7 @@ public class TSPSolver {
 		/*for(int i=0;i<this.getInstance().getNbCities();i++){ 
 		this.getSolution().setCityPosition(i,i);
 	} 
-	this.m_solution.evaluate();*/
+	this.m_solution.evaluate();
 	
 	Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
 	initialisation.getInitGene();
@@ -102,7 +103,9 @@ public class TSPSolver {
 			// TODO
 			// Code a loop base on time here
 			spentTime = System.currentTimeMillis() - startTime;
-		}while(spentTime < (m_timeLimit * 1000 - 100) );
+		}while(spentTime < (m_timeLimit * 1000 - 100) );*/
+		Fourmis f=new Fourmis(this.getInstance(),this.getTimeLimit());
+		f.Solution(1, this.getInstance())[0].evaluate();
 		
 	}
 
