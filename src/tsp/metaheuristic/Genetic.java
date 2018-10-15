@@ -25,7 +25,7 @@ public class Genetic extends TSPSolver{
 	}
 	
 	/** On choisit le nombre d'individu */
-	private static int nbIndividus = 100;
+	private static int nbIndividus = 500;
 	
 		// -----------------------------
 		// ----- Initialization --------

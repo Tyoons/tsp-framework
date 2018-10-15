@@ -72,26 +72,26 @@ public class TSPSolver {
 	{
 		
 		/*for(int i=0;i<this.getInstance().getNbCities();i++){ 
-			this.getSolution().setCityPosition(i,i);
-		} 
-		this.m_solution.evaluate();*/
-		
-		Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
-		initialisation.getInitGene();
-		initialisation.getSolution().evaluate();
-		
-		//Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
-		//initialisation.getInitGeneB();
-		Solution[] population = initialisation.creationPopulation();
-		for (int i=0;i<500;i++) {
-			population = Genetic.iterationGene(population, 2);
-		}
-		this.m_solution = population[0];
-		
-		//this.m_solution = initialisation.getSolution();
-		this.m_solution.evaluate();
-		
-		//this.m_solution=initialisation.getSolution();
+		this.getSolution().setCityPosition(i,i);
+	} 
+	this.m_solution.evaluate();*/
+	
+	Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
+	initialisation.getInitGene();
+	initialisation.getSolution().evaluate();
+	
+	//Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
+	//initialisation.getInitGeneB();
+	Solution[] population = initialisation.creationPopulation();
+	for (int i=0;i<1000;i++) {
+		population = Genetic.iterationGene(population, 2);
+	}
+	this.m_solution = population[0];
+	
+	//this.m_solution = initialisation.getSolution();
+	this.m_solution.evaluate();
+	
+	//this.m_solution=initialisation.getSolution();
 		
 		m_solution.print(System.err);
 		// Example of a time loop
