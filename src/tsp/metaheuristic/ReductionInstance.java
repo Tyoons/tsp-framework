@@ -1,16 +1,16 @@
 package tsp.metaheuristic;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
+
 
 import tsp.Instance;
 import tsp.Solution;
@@ -141,7 +141,7 @@ public class ReductionInstance  extends TSPSolver {
 			{
 			e.printStackTrace();
 			}
-		Instance copie = new Instance(nom,1);
+		Instance copie = new Instance(nom,inst.getType());
 		return copie;
 	}
 	public void effacerIndices(Instance inst,int[] indices) {

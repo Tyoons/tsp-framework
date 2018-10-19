@@ -311,6 +311,13 @@ public class Instance {
 
 		return getMin(m_y);
 	}
+	/**
+	 * 
+	 * @return the type of the instance
+	 */
+	public int getType() {
+		return this.m_typeInstance;
+	}
 
 	/**
 	 * Compute the maximum value of an array
