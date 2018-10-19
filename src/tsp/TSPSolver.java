@@ -1,7 +1,5 @@
 package tsp;
-import jdk.nashorn.internal.runtime.arrays.IteratorAction;
-import tsp.metaheuristic.Fourmis;
-import tsp.metaheuristic.Genetic;;
+import tsp.metaheuristic.*;
 /**
  * 
  * This class is the place where you should enter your code and from which you can create your own objects.
@@ -71,6 +69,9 @@ public class TSPSolver {
 	 */
 	public void solve() throws Exception
 	{
+		Fourmis f=new Fourmis(this.getInstance(),this.getTimeLimit());
+		this.m_solution=f.MeilleureFourmi();
+		this.m_solution.evaluate();
 		
 		/*for(int i=0;i<this.getInstance().getNbCities();i++){ 
 		this.getSolution().setCityPosition(i,i);
