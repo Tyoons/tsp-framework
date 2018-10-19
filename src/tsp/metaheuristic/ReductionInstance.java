@@ -76,6 +76,7 @@ public class ReductionInstance  extends TSPSolver {
 	        {
 	            String line;
 	            String aecrire = "DIMENSION : " + indices.length ;
+	            fille.println("copie"+ numeroGroupe);
 	            fille.println(aecrire);
 	            do
 	    		{
@@ -123,6 +124,7 @@ public class ReductionInstance  extends TSPSolver {
 			try (BufferedReader mere = new BufferedReader(new FileReader(inst.getFileName())))
 	        {
 				String line ;
+				fille.println("copie");
 	            while (!(line = mere.readLine()).startsWith("EOF")) {
 	            	// on parcourt toutes les lignes
 	            		fille.println(line);
@@ -135,6 +137,7 @@ public class ReductionInstance  extends TSPSolver {
 	        }
 			fille.print("EOF" ); // end of file
 			fille.close();
+			
 		}
 			
 			catch (IOException e)
@@ -144,9 +147,52 @@ public class ReductionInstance  extends TSPSolver {
 		Instance copie = new Instance(nom,inst.getType());
 		return copie;
 	}
-	public void effacerIndices(Instance inst,int[] indices) {
-		
-		
+	public static Instance effacerIndices(Instance inst,int[] indices) throws IOException {
+		String nom = inst.getFileName() + "tampon";
+		String line;
+		try {
+			PrintWriter fille = new PrintWriter(new FileWriter(new File(nom)));
+			try (BufferedReader mere = new BufferedReader(new FileReader(inst.getFileName())))
+	        {
+				do
+	    		{
+	    			line = mere.readLine();
+	    			fille.println(line);
+	    		} while (!line.startsWith("DIMENSION"));
+	        
+				
+	            String aecrire = "DIMENSION : " + (inst.getNbCities()- indices.length) ;
+	            fille.println(aecrire);
+	    			line = mere.readLine();
+	    			fille.println(line);
+	    			line = mere.readLine();
+	    			fille.println(line);
+				int i = 0;
+				while (!(line = mere.readLine()).startsWith("EOF")&& i<  indices.length ) {
+	            	// on parcourt toutes les lignes
+					if(indices[i] !=Integer.parseInt(line.split(" ")[0])) {
+	            		fille.println(line);
+	            	}
+					else {
+						i++;
+					}
+					
+				}
+	            mere.close();
+				 } 
+				catch (IOException e) {
+		            e.printStackTrace();
+		        }
+				fille.print("EOF" ); // end of file
+				fille.close();
+				}
+				catch (IOException e)
+				{
+				e.printStackTrace();
+				}
+		Instance copie = new Instance(nom,inst.getType());
+		return copie;
 	}
-
 }
+
+
