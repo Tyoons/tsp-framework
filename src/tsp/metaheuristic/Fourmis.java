@@ -19,9 +19,9 @@ public class Fourmis extends TSPSolver{
 		 }
 		 this.TempsDeParcours=0;
 		 this.EtatFourmi=0;
-		 this.borneMin=0;
+		/* this.borneMin=0;
 		 this.evaporation=(float) 0.2;
-		 this.pheromones=new float[n][n];
+		 this.pheromones=new float[n][n]; */
 	}
 
    private List<Integer> VillesVisitées;        // toutes les villes visitées par la fourmi
@@ -38,7 +38,7 @@ public class Fourmis extends TSPSolver{
    
  
 
-public void findNextSearchDestination() throws Exception { // détermination du prochain nœud à atteindre
+public void findNextSearchDestination() throws Exception { // détermination du prochain noeud à atteindre
 	   switch(EtatFourmi){
        	case 0:{
             VillesVisitées.add(0);
@@ -49,7 +49,6 @@ public void findNextSearchDestination() throws Exception { // détermination du 
             VilleDestination = Destination;
             PositionSurArcActuel = 0;
             LongueurArcActuel =this.getInstance().getDistances(0,VilleDestination);
-            break;
         }
         case 1:{ // si la fourmi cherche son chemin dans le graphe
             // on a atteint currentDestination           
@@ -96,7 +95,7 @@ public void findNextSearchDestination() throws Exception { // détermination du 
     }   
 }
 
-   public void frame() throws Exception{
+   public void frame() throws Exception{ //Vérifié
 	    switch(this.EtatFourmi){
 	        case 1:{
 	            this.TempsDeParcours ++;
@@ -106,11 +105,9 @@ public void findNextSearchDestination() throws Exception { // détermination du 
 	            if (this.PositionSurArcActuel >= this.LongueurArcActuel) {
 	            	this.findNextSearchDestination();
 	            }
-	            break; 
 	        }
 	        case 0:{
-	            this.findNextSearchDestination();
-	            break;              
+	            this.findNextSearchDestination();             
 	        }
 	    }
    }
@@ -123,13 +120,10 @@ private int getNearCity(int i) throws Exception {
 	        	TaillePheromone += this.pheromones[i][ this.VillesPasEncoreVisitées.get(k)];
 	        }
 	}
-	float found =(float) (Math.random()*TaillePheromone);
+	float found =(float) (Math.random()*TaillePheromone*1000)/1000;
 	float Pheromones = 0;
 	int j = 0;
 	while (j < this.VillesPasEncoreVisitées.size()){
-		if (this.VillesPasEncoreVisitées.get(j) == i){
-			j++;
-	    }
 		Pheromones  += pheromones[VilleDestination][ this.VillesPasEncoreVisitées.get(j)];
 	 
 		if (Pheromones>found) {
@@ -166,9 +160,12 @@ public Solution[] Solution(int NombreFourmis,Instance instance) throws Exception
 		 while(true) {
 			 try {
 				 f.frame();
+				 System.out.println(f.EtatFourmi);
+				 System.out.println(f.VilleOrigine);
+				 System.out.println(f.PositionSurArcActuel);
 			 }catch(Exception e) {
 				 if(e.getMessage().equals("Effacer")) { 
-					 s[i]=null;
+					 s[i]=new Solution(instance);
 					 temps[i]=100000000;
 				 }
 				 else {

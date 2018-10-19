@@ -81,8 +81,8 @@ public class TSPSolver {
 	initialisation.getInitGene();
 	initialisation.getSolution().evaluate();
 	
-	//Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
-	//initialisation.getInitGeneB();
+	Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
+	initialisation.getInitGeneB();
 	Solution[] population = initialisation.creationPopulation();
 	for (int i=0;i<500;i++) {
 		population = Genetic.iterationGene2OPT(population);
@@ -103,10 +103,10 @@ public class TSPSolver {
 			// TODO
 			// Code a loop base on time here
 			spentTime = System.currentTimeMillis() - startTime;
-		}while(spentTime < (m_timeLimit * 1000 - 100) );*/
-		Fourmis f=new Fourmis(this.getInstance(),this.getTimeLimit());
-		f.Solution(1, this.getInstance())[0].evaluate();
-		
+		}while(spentTime < (m_timeLimit * 1000 - 100) );
+		/*Fourmis f=new Fourmis(this.getInstance(),this.getTimeLimit());
+		this.m_solution=f.Solution(1, this.getInstance())[0];
+		this.m_solution.evaluate();*/
 	}
 
 	// -----------------------------
