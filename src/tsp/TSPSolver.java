@@ -69,9 +69,13 @@ public class TSPSolver {
 	 */
 	public void solve() throws Exception
 	{
+		//Algorithme des fourmis pour l'instance donnée
+		//*
 		Fourmis f=new Fourmis(this.getInstance(),this.getTimeLimit());
 		this.m_solution=f.MeilleureFourmi();
 		this.m_solution.evaluate();
+		/*
+		//Décommenter la partie supérieure pour les fourmis
 		
 		/*for(int i=0;i<this.getInstance().getNbCities();i++){ 
 		this.getSolution().setCityPosition(i,i);

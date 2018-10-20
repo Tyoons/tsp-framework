@@ -35,66 +35,59 @@ public class Fourmis extends Environnement{
  
 
 public void findNextSearchDestination() throws Exception { // détermination du prochain noeud à atteindre
-	   switch(EtatFourmi){
-       	case 0:{
+	if (this.EtatFourmi==0) {
             VillesVisitées.add(0);
-            VillesPasEncoreVisitées.remove(0);          
-            int Destination = getNearCity(0);
+            VillesPasEncoreVisitées.remove(this.VillesPasEncoreVisitées.lastIndexOf(0));          
+            int Destination = getNearCity(0,this.VillesPasEncoreVisitées);
             EtatFourmi = 1;
             VilleOrigine = 0;
             VilleDestination = Destination;
           //PositionSurArcActuel = 0;
           //LongueurArcActuel =this.getInstance().getDistances(0,VilleDestination);
-            break;
         }
-        case 1:{ // la fourmi est sur le graphe
+	else {
+		if(this.EtatFourmi==1) { // la fourmi est sur le graphe
             this.TempsDeParcours+=this.getInstance().getDistances(this.VilleOrigine, this.VilleDestination);  
-            if (this.VillesPasEncoreVisitées.size() == 0){ // rien d'autre à visiter, on revient
+            if (this.VillesPasEncoreVisitées.size() == 1){ // rien d'autre à visiter, on revient
                 this.TempsDeParcours += this.getInstance().getDistances(VilleDestination, 0);
+                this.VillesVisitées.add(this.VillesPasEncoreVisitées.get(0));
                 this.EtatFourmi = -1;
                 this.VilleOrigine=0;
                 this.VilleDestination=this.VillesVisitées.size()-1; // on s'intéresse maintenant aux indexs des villes!
                 //this.LongueurArcActuel=this.getInstance().getDistances(this.VillesVisitées.get(VilleOrigine), this.VillesVisitées.get(VilleDestination));
                 //this.PositionSurArcActuel=this.LongueurArcActuel;
-                break;
             }
             else {
-            	int Destination = getNearCity(this.VilleDestination);
-            	System.out.println("Je cherche la prochaine ville:");
-            	System.out.println("Je viens de:");
-            	System.out.println(this.VilleOrigine);
-            	System.out.println("Je vais à la ville:");
-            	System.out.println(this.VilleDestination);
             	VillesVisitées.add(this.VilleDestination);
-                VillesPasEncoreVisitées.remove(this.VilleDestination);
+                VillesPasEncoreVisitées.remove(VillesPasEncoreVisitées.lastIndexOf(this.VilleDestination));
             	this.VilleOrigine = this.VilleDestination;
+            	int Destination = getNearCity(this.VilleDestination,this.VillesPasEncoreVisitées);
             	this.VilleDestination = Destination; 
             	//this.LongueurArcActuel=this.getInstance().getDistances(VilleOrigine, VilleDestination);
             	//this.PositionSurArcActuel=0;
-            	break;
             }
         }
-        case -1:{  // si la fourmi revient au nid
-            if (this.VilleDestination == 0){
-                // retournée au nid avec succès
-                this.pheromones[this.VillesVisitées.get(VilleOrigine)][0]= super.facteur/this.TempsDeParcours;
-                this.pheromones[0][this.VillesVisitées.get(VilleOrigine)]=super.facteur/this.TempsDeParcours;
-                this.EtatFourmi=2;
-                break;
-            }
-            else{
+		else {
+			if(this.EtatFourmi==-1) {
+				if (this.VilleDestination == 0){
+					// retournée au nid avec succès
+					this.pheromones[this.VillesVisitées.get(VilleOrigine)][0]= super.facteur/this.TempsDeParcours;
+					this.pheromones[0][this.VillesVisitées.get(VilleOrigine)]=super.facteur/this.TempsDeParcours;
+					this.EtatFourmi=2;
+				}
+				else{
  
-            // trouver la ville précédemment visitée et la passer en destination
-            // mettre des phéromones sur l'arc parcouru
-            this.pheromones[this.VillesVisitées.get(VilleOrigine)][this.VillesVisitées.get(VilleDestination)]= super.facteur/this.TempsDeParcours;
-            this.pheromones[this.VillesVisitées.get(VilleDestination)][this.VillesVisitées.get(VilleOrigine)]= super.facteur/this.TempsDeParcours;
-            this.VilleOrigine=this.VilleDestination;
-            this.VilleDestination=this.VilleOrigine-1;
-            //this.LongueurArcActuel=this.getInstance().getDistances(VilleOrigine, VilleDestination);
-        	//this.PositionSurArcActuel=this.LongueurArcActuel;
-            break;
-        }
-        }
+					// trouver la ville précédemment visitée et la passer en destination
+					// mettre des phéromones sur l'arc parcouru
+					this.pheromones[this.VillesVisitées.get(VilleOrigine)][this.VillesVisitées.get(VilleDestination)]= super.facteur/this.TempsDeParcours;
+					this.pheromones[this.VillesVisitées.get(VilleDestination)][this.VillesVisitées.get(VilleOrigine)]= super.facteur/this.TempsDeParcours;
+					this.VilleOrigine=this.VilleDestination;
+					this.VilleDestination=this.VilleOrigine-1;
+					//this.LongueurArcActuel=this.getInstance().getDistances(VilleOrigine, VilleDestination);
+					//this.PositionSurArcActuel=this.LongueurArcActuel;
+				}
+			}
+		}
 }
 }
 
@@ -115,29 +108,33 @@ public void findNextSearchDestination() throws Exception { // détermination du 
 	    }
    }*/
 
-private int getNearCity(int i) throws Exception {
+private int getNearCity(int i,List<Integer> V) throws Exception {
 	    // méthode de la règle aléatoire de transition proportionnelle
 	double Poids = 0; 
-	double[] VillesDisponibles=new double[this.VillesPasEncoreVisitées.size()];
-	System.out.println("Il reste "+this.VillesPasEncoreVisitées.size()+" villes");
-	for (int k = 0; k < this.VillesPasEncoreVisitées.size(); k++){
-		if(this.VillesPasEncoreVisitées.get(k)!=i) {
-			Poids+= this.gamma+Math.pow(this.pheromones[i][ this.VillesPasEncoreVisitées.get(k)],this.alpha)*Math.pow(1/this.getInstance().getDistances(i, this.VillesPasEncoreVisitées.get(k)),this.beta);
+	double[] VillesDisponibles=new double[V.size()];
+	for (int k = 0; k < V.size(); k++){
+		if(V.get(k)!=i) {
+			Poids+= this.gamma+Math.pow(this.pheromones[i][V.get(k)],this.alpha)*Math.pow(1/this.getInstance().getDistances(i,V.get(k)),this.beta);
 		}
-		System.out.println(Poids);
 	}
-	for(int j=0;j<this.VillesPasEncoreVisitées.size();j++){
-		if(this.VillesPasEncoreVisitées.get(j)!=i) {
-			VillesDisponibles[j]=(this.gamma+Math.pow(this.pheromones[i][ this.VillesPasEncoreVisitées.get(j)],this.alpha)*Math.pow(1/this.getInstance().getDistances(i, this.VillesPasEncoreVisitées.get(j)),this.beta))/Poids;
-		System.out.println(VillesDisponibles[j]);
-	}
+	for(int j=0;j<VillesDisponibles.length;j++){
+		if(V.get(j)!=i) {
+			VillesDisponibles[j]=(this.gamma+Math.pow(this.pheromones[i][V.get(j)],this.alpha)*Math.pow(1/this.getInstance().getDistances(i,V.get(j)),this.beta))/Poids;
+			}
 	}
 	double proba=Math.random();
-	int l=0;;
-	while(l<this.VillesPasEncoreVisitées.size() && proba<VillesDisponibles[l]) {
-		l++;
+	int l=0;
+	double sum=VillesDisponibles[0];
+	if(VillesDisponibles.length>0) {
+		while(l<VillesDisponibles.length && proba>sum) {
+			l++;
+			sum+=VillesDisponibles[l];
+		}
+		return V.get(l);
 	}
-	return this.VillesPasEncoreVisitées.get(l);
+	else {
+		return V.get(0);
+	}
 }
 
 
@@ -146,13 +143,8 @@ public Solution[] Solution(int NombreFourmis) throws Exception {
 	 Solution[] s= new Solution[NombreFourmis];
 	 for (int i=0; i<NombreFourmis; i++){
 		 Fourmis f=new Fourmis(this.getInstance(),this.getTimeLimit());
-		 while(f.EtatFourmi!=2) {
-			 System.out.println("On est là:");
-			 System.out.println(f.VillesVisitées);
-			 
-			 f.findNextSearchDestination();
-			 
-			 
+		 while(f.EtatFourmi!=2) {	
+			 f.findNextSearchDestination();			 
 		 }
 		 Solution sol=new Solution(this.getInstance());
 		 for(int k=0;k<f.VillesVisitées.size();k++) {
@@ -168,14 +160,14 @@ public Solution[] Solution(int NombreFourmis) throws Exception {
 }
 
 public Solution MeilleureFourmi() throws Exception {
-	Solution[] s=this.Solution(500);
+	Solution[] s=this.Solution(this.getInstance().getNbCities());
 	int m=0;
 	double min=s[0].evaluate();
 	for(int i=1;i<s.length;i++){
 		if(s[i].evaluate()<min) {
 			m=i;
 			min=s[i].evaluate();
-			System.out.println(m);
+			System.out.println("Nouvelle Meilleure fourmie:"+m);
 		}
 	}
 	return s[m];
