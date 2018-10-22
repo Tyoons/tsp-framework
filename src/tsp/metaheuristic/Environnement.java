@@ -11,7 +11,6 @@ public class Environnement extends TSPSolver{
 	public double alpha;
 	public double facteur;
 	public double evaporation;
-    public double borneMin;
 		 
     public Environnement(Instance instance, long timeLimit) {
 		super(instance, timeLimit);
