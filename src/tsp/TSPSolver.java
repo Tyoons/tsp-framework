@@ -69,6 +69,7 @@ public class TSPSolver {
 	 */
 	public void solve() throws Exception
 	{
+		/*
 		//Algorithme des fourmis pour l'instance donnée
 		//*
 		Fourmis f=new Fourmis(this.getInstance(),this.getTimeLimit());
@@ -80,21 +81,21 @@ public class TSPSolver {
 		/*for(int i=0;i<this.getInstance().getNbCities();i++){ 
 		this.getSolution().setCityPosition(i,i);
 	} 
-	this.m_solution.evaluate();
+	this.m_solution.evaluate();*/
 	
-	Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
+	/**Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
 	initialisation.getInitGene();
 	initialisation.getSolution().evaluate();
 	
-	Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
-	initialisation.getInitGeneB();
 	Solution[] population = initialisation.creationPopulation();
 	for (int i=0;i<500;i++) {
-		population = Genetic.iterationGene2OPT(population);
+		population = Genetic.iterationGene(population);
 	}
-	this.m_solution = population[0];
+	this.m_solution = population[0];*/
 	
 	//this.m_solution = initialisation.getSolution();
+	OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
+	this.m_solution = initialisation.OPTMain(1);
 	this.m_solution.evaluate();
 	
 	//this.m_solution=initialisation.getSolution();

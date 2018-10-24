@@ -25,7 +25,7 @@ public class Genetic extends TSPSolver{
 	}
 	
 	/** On choisit le nombre d'individu */
-	private static int nbIndividus = 500;
+	private static int nbIndividus = 200;
 	
 		// -----------------------------
 		// ----- Initialization --------
@@ -54,7 +54,7 @@ public class Genetic extends TSPSolver{
 			voisins = this.getInstance().getDistances()[i]; // On r�cup�re les distances entre la ville et ses voisins
 			voisins[i] = 150000; // On set la distance de notre ville a inf (0 a la base)
 			long min = 150000;
-			int indice = i; // Indice qui servira � trouver le min
+			int indice = i; // Indice qui servira  a  trouver le min
 			for (int j=0;j<nbVilles-1;j++) { // On test tous les voisins 
 				if (!testInt(j, visite) && voisins[j]<min) { // Si le sommet j n'a pas d�j� �t� visit� et que sa distance est < a notre min
 					min = voisins[j]; 

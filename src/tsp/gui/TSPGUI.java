@@ -29,8 +29,8 @@ public class TSPGUI extends JFrame implements ActionListener {
 		super("TSP VIZUALISATION");
 		this.m_solution = solution;
 		
-		final int GUIwidth = 800;
-		final int GUIheight = 800;
+		final int GUIwidth = 600;
+		final int GUIheight = 600;
 		this.setSize(new Dimension(GUIwidth, GUIheight));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
