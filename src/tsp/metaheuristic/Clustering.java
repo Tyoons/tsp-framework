@@ -1,6 +1,5 @@
 package tsp.metaheuristic;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import tsp.Instance;
@@ -45,12 +44,6 @@ public class Clustering extends TSPSolver  {
 		return barycentre;
 	}
 
-	public ArrayList<Instance> Reduction(){
-		ArrayList<Instance> listeInstance = new ArrayList<Instance>();
-		
-		
-		return listeInstance;
-	}
 	
 	public static Instance nouveauGroupe(Instance inst, ArrayList<String> labels) throws Exception {
 		Instance nouveauGroupe = new  Instance(inst.getFileName(), inst.getType());
@@ -171,7 +164,15 @@ public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 	boolean ajout = false;
 	for (int i = 0; i<n;i++) {
 		ArrayList<String> indexes = new ArrayList<String>();
-		for(int j =i;j<n;j++) {
+		for(int j =0;j<n;j++) {
+			
+				for(int k =0; k< indexes.size();k++){
+					if(listeInstance.get(0).getDistances(Integer.parseInt(indexes.get(k)),j)< dmoy/5) {
+						indexes.add(listeInstance.get(0).getLabel(j));
+					}
+				}
+			
+			
 			if(listeInstance.get(0).getDistances(i, j) < dmoy/5) {
 				indexes.add(listeInstance.get(0).getLabel(j));
 				ajout = true;
