@@ -132,6 +132,7 @@ public class Instance {
 			if(index > m_nbCities)
 			{
 				System.exit(1);
+				
 			}
 			// System.out.println(line);
 			lineSc = new Scanner(line);
@@ -468,6 +469,41 @@ public class Instance {
 	 */
 	public String getFileName() {
 		return m_fileName;
+	}
+	/**
+	 * Set the number of cities 
+	 * @param nbCities
+	 */
+	public void setNbCities(int nbCities) {
+		this.m_nbCities=nbCities;
+	}
+	/**
+	 * set the m_x vector to a new one
+	 * @param m_x
+	 */
+	public void setM_x(double[] m_x) {
+		this.m_x = m_x;
+	}
+	/**
+	 * set the vector m_y to a new one
+	 * @param m_y
+	 */
+	public void setM_y(double[] m_y) {
+		this.m_y =m_y;
+	}
+	/**
+	 * set the vector of labels
+	 * @param m_labels
+	 */
+	public void setM_labels(String[] m_labels) {
+		this.m_labels=m_labels;
+	}
+	/**
+	 * set the distances matrix
+	 * @param m_distances
+	 */
+	public void setM_distances(long[][] m_distances) {
+		this.m_distances = m_distances;
 	}
 
 }

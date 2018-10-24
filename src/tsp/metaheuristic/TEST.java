@@ -2,6 +2,7 @@ package tsp.metaheuristic;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import tsp.Instance;
 
@@ -13,17 +14,11 @@ public class TEST extends ReductionInstance {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		
 		Instance inst = new Instance("instances/kroA100.tsp", 2);
-		 Instance instanceCopiee = CreerCopie(inst);
-		int[] indices = new int[10];
-		for (int i =0; i<10; i++) {
-			indices [i]= 2*i+1;
-		}
-		
-		CreerCopieIndices(instanceCopiee, indices,2);
-		instanceCopiee = effacerIndices(instanceCopiee,indices);
+		 ArrayList<Instance> liste = new ArrayList<Instance>();
+		 liste = reduction(inst);
 		
 		// TODO Auto-generated method stub
 

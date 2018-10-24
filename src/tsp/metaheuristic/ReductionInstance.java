@@ -37,7 +37,7 @@ public class ReductionInstance  extends TSPSolver {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public double d_moy(Instance inst) {
+	public static double d_moy(Instance inst) {
 		long[][] distances = inst.getDistances();
 		double dmoy;
 		dmoy = 0;
@@ -52,7 +52,7 @@ public class ReductionInstance  extends TSPSolver {
 	return dmoy/(n*(n+1)/2);
 	}
 
-	public double[] barycentre(Instance inst) throws Exception {
+	public static double[] barycentre(Instance inst) throws Exception {
 		double [] barycentre= new double[2];
 		double X = 0;
 		double Y = 0;
@@ -67,7 +67,7 @@ public class ReductionInstance  extends TSPSolver {
 		barycentre[1] = Y;
 		return barycentre;
 	}
-	public static void CreerCopieIndices (Instance inst, int[] indices, int numeroGroupe) {
+	public static Instance CreerCopieIndices (Instance inst, ArrayList<String> indices, int numeroGroupe) throws IOException {
 		String nom = inst.getFileName();
 		nom += numeroGroupe;
 		try {
@@ -75,14 +75,14 @@ public class ReductionInstance  extends TSPSolver {
 			try (BufferedReader mere = new BufferedReader(new FileReader(inst.getFileName())))
 	        {
 	            String line;
-	            String aecrire = "DIMENSION : " + indices.length ;
+	            String aecrire = "DIMENSION: " + indices.size() ;
 	            fille.println("copie"+ numeroGroupe);
 	            fille.println(aecrire);
 	            do
 	    		{
 	    			line = mere.readLine();
-	    			System.err.println(line);
 	    		} while (!line.startsWith("DIMENSION"));
+	     
 	            
 	    			line = mere.readLine();
 	    			fille.println(line);
@@ -90,14 +90,13 @@ public class ReductionInstance  extends TSPSolver {
 	    			fille.println(line);
 	    			// on recopie les deux lignes qui spécifient
 	    			int i = 0;
-	            while (!(line = mere.readLine()).startsWith("EOF") && i<indices.length) {
+	            while (!(line = mere.readLine()).startsWith("EOF") && i<indices.size()) {
 	            	// on parcourt toutes les lignes
-	            	System.out.println(indices[i]);
-	            	if(indices[i] ==Integer.parseInt(line.split(" ")[0])) {
+	            	
+	            	
+	            	if(indices.get(i).equals(line.split(" ")[0])) {
 	           // on ne recopie que les lignes qui nous interressent
 	            		fille.println(line);
-	            		System.out.println(indices[i]);
-	            		System.out.println(line);
 	            		i++;
 	            	}     
 	            }
@@ -113,12 +112,14 @@ public class ReductionInstance  extends TSPSolver {
 			{
 			e.printStackTrace();
 			}
+		Instance copie = new Instance(nom,inst.getType());
+		return copie;
 		
 	}
 	public static Instance  CreerCopie(Instance inst) throws IOException {
 		
 		String nom = inst.getFileName();
-		nom += "_copie";
+		nom += "_c";
 		try {
 			PrintWriter fille = new PrintWriter(new FileWriter(new File(nom)));
 			try (BufferedReader mere = new BufferedReader(new FileReader(inst.getFileName())))
@@ -147,13 +148,61 @@ public class ReductionInstance  extends TSPSolver {
 		Instance copie = new Instance(nom,inst.getType());
 		return copie;
 	}
-	public static Instance effacerIndices(Instance inst,int[] indices) throws IOException {
-		String nom = inst.getFileName() + "tampon";
+	
+	public static Instance AjouterGroupe(Instance parent, Instance ajout, int indice) throws Exception {
+		String nom = parent.getFileName();
+		nom += "_";
+		double[] barycentre = barycentre(ajout);
+		try {
+			PrintWriter fille = new PrintWriter(new FileWriter(new File(nom)));
+			try (BufferedReader mere = new BufferedReader(new FileReader(parent.getFileName())))
+	        {
+	            String line;
+	            String aecrire = "DIMENSION : " + (parent.getNbCities()+1);
+	            fille.println(aecrire);
+	            do
+	    		{
+	    			line = mere.readLine();
+	    		} while (!line.startsWith("DIMENSION"));
+	            
+	    			line = mere.readLine();
+	    			line = mere.readLine();
+	    			fille.println(line);
+	    			line = mere.readLine();
+	    			fille.println(line);
+	            while (!(line = mere.readLine()).startsWith("EOF")) {
+	            	// on parcourt toutes les lignes
+	            		fille.println(line);
+	            	}     
+	            
+	            mere.close();
+	        } 
+			catch (IOException e) {
+	            e.printStackTrace();
+	        }
+			fille.println(indice + " "+barycentre[0] + " "+barycentre[1]);
+			fille.print("EOF" ); // end of file
+			fille.close();
+			
+		}
+			
+			catch (IOException e)
+			{
+			e.printStackTrace();
+			}
+		Instance copie = new Instance(nom,parent.getType());
+		return copie;
+	
+}
+	public static Instance effacerIndices(Instance inst,ArrayList<String> indices) throws IOException {
+		String nom = inst.getFileName() + "tortue";
 		String line;
 		try {
 			PrintWriter fille = new PrintWriter(new FileWriter(new File(nom)));
 			try (BufferedReader mere = new BufferedReader(new FileReader(inst.getFileName())))
 	        {
+				String aecrire = "DIMENSION: " + (inst.getNbCities()- indices.size()) ;
+	            fille.println(aecrire);
 				do
 	    		{
 	    			line = mere.readLine();
@@ -161,19 +210,23 @@ public class ReductionInstance  extends TSPSolver {
 	    		} while (!line.startsWith("DIMENSION"));
 	        
 				
-	            String aecrire = "DIMENSION : " + (inst.getNbCities()- indices.length) ;
-	            fille.println(aecrire);
+	            
 	    			line = mere.readLine();
 	    			fille.println(line);
 	    			line = mere.readLine();
 	    			fille.println(line);
+	    			System.out.println(line);
 				int i = 0;
-				while (!(line = mere.readLine()).startsWith("EOF")&& i<  indices.length ) {
+				while (!(line = mere.readLine()).startsWith("EOF")&& i<  indices.size() ) {
 	            	// on parcourt toutes les lignes
-					if(indices[i] !=Integer.parseInt(line.split(" ")[0])) {
+					if((Integer.parseInt(indices.get(i)))!= Integer.parseInt(line.split(" ")[0])) {
+						System.out.println(indices.get(i));
+						System.out.println(indices.get(i).getClass());
+						System.out.println(line.split(" ")[0] + "indces");
 	            		fille.println(line);
 	            	}
 					else {
+						System.out.println(indices.get(i));
 						i++;
 					}
 					
@@ -192,6 +245,35 @@ public class ReductionInstance  extends TSPSolver {
 				}
 		Instance copie = new Instance(nom,inst.getType());
 		return copie;
+	}
+	
+	public static ArrayList<Instance> reduction(Instance inst) throws Exception{
+		ArrayList<Instance> listeInstance = new ArrayList<Instance>();
+		int n = listeInstance.get(0).getNbCities();
+		double dmoy = d_moy( listeInstance.get(0));
+		boolean ajout = false;
+		for (int i = 0; i<n;i++) {
+			ArrayList<String> indexes = new ArrayList<String>();
+			for(int j =i;j<n;j++) {
+				if(listeInstance.get(0).getDistances(i, j) < dmoy/5) {
+					indexes.add(listeInstance.get(0).getLabel(j).toString());
+					ajout = true;
+				}
+			}
+				if(ajout) {
+					indexes.add(0,listeInstance.get(0).getLabel(i).toString());
+				
+			
+			
+			listeInstance.add(CreerCopieIndices(listeInstance.get(0),indexes,i));
+			listeInstance.add(0, effacerIndices(listeInstance.get(0),indexes));
+			listeInstance.add(0,AjouterGroupe(listeInstance.get(0),listeInstance.get(listeInstance.size()-1),i));
+			n = listeInstance.get(0).getNbCities();
+				}
+		}
+		
+		return listeInstance;
+		
 	}
 }
 
