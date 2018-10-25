@@ -125,7 +125,7 @@ public static void retirer(Instance inst, ArrayList<String>labels )throws Except
 	inst.setM_labels(m_labels);
 }
 
-public static void ajouter(Instance inst, Instance groupe) throws Exception {
+public static void ajouter(Instance inst, Instance groupe, int indice) throws Exception {
 	int n = inst.getNbCities()+1;
 	double[] barycentre = barycentre(groupe);
 	double [] m_x = new double[n];
@@ -139,7 +139,7 @@ public static void ajouter(Instance inst, Instance groupe) throws Exception {
 	}
 	m_x[n-1] = barycentre[0];
 	m_y[n-1] = barycentre[1];
-	m_labels[n-1] = groupe.getLabel(0);
+	m_labels[n-1] = indice+"";
 	for(int i=0; i<n; i++) {
 		for(int j=i;j<n;j++) {
 			
@@ -159,6 +159,8 @@ public static void ajouter(Instance inst, Instance groupe) throws Exception {
 
 public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 	ArrayList<Instance> listeInstance = new ArrayList<Instance>();
+	int nb_cities = inst.getNbCities();
+	int nb_monde = listeInstance.size();
 	int n = listeInstance.get(0).getNbCities();
 	double dmoy = d_moy( listeInstance.get(0));
 	boolean ajout = false;
@@ -169,6 +171,7 @@ public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 				for(int k =0; k< indexes.size();k++){
 					if(listeInstance.get(0).getDistances(Integer.parseInt(indexes.get(k)),j)< dmoy/5) {
 						indexes.add(listeInstance.get(0).getLabel(j));
+						
 					}
 				}
 			
@@ -176,16 +179,19 @@ public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 			if(listeInstance.get(0).getDistances(i, j) < dmoy/5) {
 				indexes.add(listeInstance.get(0).getLabel(j));
 				ajout = true;
+				
 			}
 		}
 			if(ajout) {
 				indexes.add(0,listeInstance.get(0).getLabel(i));
+				
 			
 		
 		
 		listeInstance.add(nouveauGroupe(listeInstance.get(0),indexes));
+		nb_monde = listeInstance.size();
 		retirer(listeInstance.get(0),indexes);
-		ajouter(listeInstance.get(0),listeInstance.get(listeInstance.size()-1));
+		ajouter(listeInstance.get(0),listeInstance.get(listeInstance.size()-1),nb_monde + nb_cities);
 		n = listeInstance.get(0).getNbCities();
 			}
 	}
