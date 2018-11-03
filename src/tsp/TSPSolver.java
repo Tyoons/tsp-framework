@@ -95,7 +95,7 @@ public class TSPSolver {
 	
 	//this.m_solution = initialisation.getSolution();
 	OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
-	this.m_solution = initialisation.OPTMain(1);
+	this.m_solution = initialisation.OPTMain(2000);
 	this.m_solution.evaluate();
 	
 	//this.m_solution=initialisation.getSolution();
