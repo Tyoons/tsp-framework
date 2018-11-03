@@ -95,21 +95,21 @@ public class TSPSolver {
 	
 	//this.m_solution = initialisation.getSolution();
 	OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
-	this.m_solution = initialisation.OPTMain(1000);
+	this.m_solution = initialisation.OPTMain(59000);
 	this.m_solution.evaluate();
 	
 	//this.m_solution=initialisation.getSolution();
 		
 		m_solution.print(System.err);
 		// Example of a time loop
-		long startTime = System.currentTimeMillis();
+		/**long startTime = System.currentTimeMillis();
 		long spentTime = 0;
 		do
 		{
 			// TODO
 			// Code a loop base on time here
 			spentTime = System.currentTimeMillis() - startTime;
-		}while(spentTime < (m_timeLimit * 1000 - 100) );
+		}while(spentTime < (m_timeLimit * 1000 - 100) ); */ 
 	}
 
 	// -----------------------------

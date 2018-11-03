@@ -166,131 +166,134 @@ public class OPT extends TSPSolver {
 		int indiceSommet4 = getSuivant(indiceSommet3, present);
 		int indiceSommet6 = getSuivant(indiceSommet5, present);
 		
+			
+		long[] distance = new long[8];
 		
-		// 2) Tester toutes les distances et renvoyer la meilleure
-		long min = this.poids(present);
-		int[][] matMin = present;
+		distance[0] = this.getInstance().getDistances(indiceSommet1, indiceSommet2)
+				+this.getInstance().getDistances(indiceSommet3, indiceSommet4)
+				+this.getInstance().getDistances(indiceSommet5, indiceSommet6);
+		distance[1] = this.getInstance().getDistances(indiceSommet1, indiceSommet3)
+				+this.getInstance().getDistances(indiceSommet2, indiceSommet4)
+				+this.getInstance().getDistances(indiceSommet5, indiceSommet6);
+		distance[2] = this.getInstance().getDistances(indiceSommet1, indiceSommet2)
+				+this.getInstance().getDistances(indiceSommet3, indiceSommet5)
+				+this.getInstance().getDistances(indiceSommet4, indiceSommet6);
+		distance[3] = this.getInstance().getDistances(indiceSommet1, indiceSommet5)
+				+this.getInstance().getDistances(indiceSommet3, indiceSommet4)
+				+this.getInstance().getDistances(indiceSommet2, indiceSommet6);
+		distance[4] = this.getInstance().getDistances(indiceSommet1, indiceSommet4)
+				+this.getInstance().getDistances(indiceSommet3, indiceSommet5)
+				+this.getInstance().getDistances(indiceSommet2, indiceSommet6);
+		distance[5] = this.getInstance().getDistances(indiceSommet1, indiceSommet4)
+				+this.getInstance().getDistances(indiceSommet3, indiceSommet6)
+				+this.getInstance().getDistances(indiceSommet5, indiceSommet2);
+		distance[6] = this.getInstance().getDistances(indiceSommet1, indiceSommet3)
+				+this.getInstance().getDistances(indiceSommet6, indiceSommet4)
+				+this.getInstance().getDistances(indiceSommet5, indiceSommet2);
+		distance[7] = this.getInstance().getDistances(indiceSommet1, indiceSommet3)
+				+this.getInstance().getDistances(indiceSommet6, indiceSommet4)
+				+this.getInstance().getDistances(indiceSommet5, indiceSommet2);
 		
-		int[][] opt1 = copyTableau(present);
-			opt1[indiceSommet1][indiceSommet2]=0;
-			opt1[indiceSommet3][indiceSommet4]=0;
-			opt1[indiceSommet2][indiceSommet1]=0;
-			opt1[indiceSommet4][indiceSommet3]=0;
-			opt1[indiceSommet1][indiceSommet3]=1;
-			opt1[indiceSommet2][indiceSommet4]=1;
-			opt1[indiceSommet3][indiceSommet1]=1;
-			opt1[indiceSommet4][indiceSommet2]=1;
-			long opt1Poids = this.poids(opt1);
-		if (opt1Poids<min) {
-			min = opt1Poids;
-			matMin = opt1;
+		int indiceMin = 0;
+		
+		for (int i=1;i<8;i++) {
+			if (distance[i]<distance[indiceMin]) {
+				indiceMin = i;
+			}
 		}
 		
-		int[][] opt2 = copyTableau(present);
-			opt2[indiceSommet3][indiceSommet4]=0;
-			opt2[indiceSommet4][indiceSommet3]=0;
-			opt2[indiceSommet5][indiceSommet6]=0;
-			opt2[indiceSommet6][indiceSommet5]=0;
-			opt2[indiceSommet3][indiceSommet5]=1;
-			opt2[indiceSommet5][indiceSommet3]=1;
-			opt2[indiceSommet4][indiceSommet6]=1;
-			opt2[indiceSommet6][indiceSommet4]=1;
-			long  opt2Poids = this.poids(opt2);
-		if (opt2Poids<min) {
-			min = opt2Poids;
-			matMin = opt2;
+		if (1 == indiceMin) {
+			present[indiceSommet1][indiceSommet2]=0;
+			present[indiceSommet3][indiceSommet4]=0;
+			present[indiceSommet2][indiceSommet1]=0;
+			present[indiceSommet4][indiceSommet3]=0;
+			present[indiceSommet1][indiceSommet3]=1;
+			present[indiceSommet2][indiceSommet4]=1;
+			present[indiceSommet3][indiceSommet1]=1;
+			present[indiceSommet4][indiceSommet2]=1;
 		}
 		
-		int[][] opt3 = copyTableau(present);
-		opt3[indiceSommet1][indiceSommet2]=0;
-		opt3[indiceSommet2][indiceSommet1]=0;
-		opt3[indiceSommet5][indiceSommet6]=0;
-		opt3[indiceSommet6][indiceSommet5]=0;
-		opt3[indiceSommet1][indiceSommet5]=1;
-		opt3[indiceSommet5][indiceSommet1]=1;
-		opt3[indiceSommet2][indiceSommet6]=1;
-		opt3[indiceSommet6][indiceSommet2]=1;
-		long  opt3Poids = this.poids(opt3);
-	if (opt3Poids<min) {
-		min = opt3Poids;
-		matMin = opt3;
-	}
-		
-		/**int[][] opt4 = copyTableau(present);
-			opt4[indiceSommet1][indiceSommet2]=0;
-			opt4[indiceSommet2][indiceSommet1]=0;
-			opt4[indiceSommet3][indiceSommet4]=0;
-			opt4[indiceSommet4][indiceSommet3]=0;
-			opt4[indiceSommet5][indiceSommet6]=0;
-			opt4[indiceSommet6][indiceSommet5]=0;
-			opt4[indiceSommet1][indiceSommet4]=1;
-			opt4[indiceSommet4][indiceSommet1]=1;
-			opt4[indiceSommet2][indiceSommet6]=1;
-			opt4[indiceSommet6][indiceSommet2]=1;
-			opt4[indiceSommet3][indiceSommet5]=1;
-			opt4[indiceSommet5][indiceSommet3]=1;
-			long  opt4Poids = this.poids(opt4);
-		if (opt4Poids<min) {
-			min = opt4Poids;
-			matMin = opt4;
+		if (2 == indiceMin) {
+			present[indiceSommet3][indiceSommet4]=0;
+			present[indiceSommet4][indiceSommet3]=0;
+			present[indiceSommet5][indiceSommet6]=0;
+			present[indiceSommet6][indiceSommet5]=0;
+			present[indiceSommet3][indiceSommet5]=1;
+			present[indiceSommet5][indiceSommet3]=1;
+			present[indiceSommet4][indiceSommet6]=1;
+			present[indiceSommet6][indiceSommet4]=1;
 		}
 		
-		int[][] opt5 = copyTableau(present);
-			opt5[indiceSommet1][indiceSommet2]=0;
-			opt5[indiceSommet2][indiceSommet1]=0;
-			opt5[indiceSommet3][indiceSommet4]=0;
-			opt5[indiceSommet4][indiceSommet3]=0;
-			opt5[indiceSommet5][indiceSommet6]=0;
-			opt5[indiceSommet6][indiceSommet5]=0;
-			opt5[indiceSommet1][indiceSommet4]=1;
-			opt5[indiceSommet4][indiceSommet1]=1;
-			opt5[indiceSommet2][indiceSommet5]=1;
-			opt5[indiceSommet5][indiceSommet2]=1;
-			opt5[indiceSommet3][indiceSommet6]=1;
-			opt5[indiceSommet6][indiceSommet3]=1;
-			long  opt5Poids = this.poids(opt5);
-		if (opt5Poids<min) {
-			min = opt5Poids;
-			matMin = opt5;
-		}	
-		
-		int[][] opt6 = copyTableau(present);
-			opt6[indiceSommet1][indiceSommet2]=0;
-			opt6[indiceSommet2][indiceSommet1]=0;
-			opt6[indiceSommet3][indiceSommet4]=0;
-			opt6[indiceSommet4][indiceSommet3]=0;
-			opt6[indiceSommet5][indiceSommet6]=0;
-			opt6[indiceSommet6][indiceSommet5]=0;
-			opt6[indiceSommet1][indiceSommet3]=1;
-			opt6[indiceSommet3][indiceSommet1]=1;
-			opt6[indiceSommet2][indiceSommet5]=1;
-			opt6[indiceSommet5][indiceSommet2]=1;
-			opt6[indiceSommet4][indiceSommet6]=1;
-			opt6[indiceSommet6][indiceSommet4]=1;
-			long  opt6Poids = this.poids(opt6);
-		if (opt6Poids<min) {
-			min = opt6Poids;
-			matMin = opt6;
+		if (3 == indiceMin) {
+		present[indiceSommet1][indiceSommet2]=0;
+		present[indiceSommet2][indiceSommet1]=0;
+		present[indiceSommet5][indiceSommet6]=0;
+		present[indiceSommet6][indiceSommet5]=0;
+		present[indiceSommet1][indiceSommet5]=1;
+		present[indiceSommet5][indiceSommet1]=1;
+		present[indiceSommet2][indiceSommet6]=1;
+		present[indiceSommet6][indiceSommet2]=1;
 		}
 		
-		int[][] opt7 = copyTableau(present);
-			opt7[indiceSommet1][indiceSommet2]=0;
-			opt7[indiceSommet2][indiceSommet1]=0;
-			opt7[indiceSommet3][indiceSommet4]=0;
-			opt7[indiceSommet4][indiceSommet3]=0;
-			opt7[indiceSommet5][indiceSommet6]=0;
-			opt7[indiceSommet6][indiceSommet5]=0;
-			opt7[indiceSommet1][indiceSommet3]=1;
-			opt7[indiceSommet3][indiceSommet1]=1;
-			opt7[indiceSommet2][indiceSommet5]=1;
-			opt7[indiceSommet5][indiceSommet2]=1;
-			opt7[indiceSommet4][indiceSommet6]=1;
-			opt7[indiceSommet6][indiceSommet4]=1;
-			long  opt7Poids = this.poids(opt7);
-		if (opt7Poids<min) {
-			min = opt7Poids;
-			matMin = opt7;
-		}	*/
+		if (4 == indiceMin) {
+			present[indiceSommet1][indiceSommet2]=0;
+			present[indiceSommet2][indiceSommet1]=0;
+			present[indiceSommet3][indiceSommet4]=0;
+			present[indiceSommet4][indiceSommet3]=0;
+			present[indiceSommet5][indiceSommet6]=0;
+			present[indiceSommet6][indiceSommet5]=0;
+			present[indiceSommet1][indiceSommet4]=1;
+			present[indiceSommet4][indiceSommet1]=1;
+			present[indiceSommet2][indiceSommet6]=1;
+			present[indiceSommet6][indiceSommet2]=1;
+			present[indiceSommet3][indiceSommet5]=1;
+			present[indiceSommet5][indiceSommet3]=1;
+		}
+		
+		if (5 == indiceMin) {
+			present[indiceSommet1][indiceSommet2]=0;
+			present[indiceSommet2][indiceSommet1]=0;
+			present[indiceSommet3][indiceSommet4]=0;
+			present[indiceSommet4][indiceSommet3]=0;
+			present[indiceSommet5][indiceSommet6]=0;
+			present[indiceSommet6][indiceSommet5]=0;
+			present[indiceSommet1][indiceSommet4]=1;
+			present[indiceSommet4][indiceSommet1]=1;
+			present[indiceSommet2][indiceSommet5]=1;
+			present[indiceSommet5][indiceSommet2]=1;
+			present[indiceSommet3][indiceSommet6]=1;
+			present[indiceSommet6][indiceSommet3]=1;
+		}
+		
+		if (6 == indiceMin) {
+			present[indiceSommet1][indiceSommet2]=0;
+			present[indiceSommet2][indiceSommet1]=0;
+			present[indiceSommet3][indiceSommet4]=0;
+			present[indiceSommet4][indiceSommet3]=0;
+			present[indiceSommet5][indiceSommet6]=0;
+			present[indiceSommet6][indiceSommet5]=0;
+			present[indiceSommet1][indiceSommet3]=1;
+			present[indiceSommet3][indiceSommet1]=1;
+			present[indiceSommet2][indiceSommet5]=1;
+			present[indiceSommet5][indiceSommet2]=1;
+			present[indiceSommet4][indiceSommet6]=1;
+			present[indiceSommet6][indiceSommet4]=1;
+		}
+		
+		if (7 == indiceMin) {
+			present[indiceSommet1][indiceSommet2]=0;
+			present[indiceSommet2][indiceSommet1]=0;
+			present[indiceSommet3][indiceSommet4]=0;
+			present[indiceSommet4][indiceSommet3]=0;
+			present[indiceSommet5][indiceSommet6]=0;
+			present[indiceSommet6][indiceSommet5]=0;
+			present[indiceSommet1][indiceSommet3]=1;
+			present[indiceSommet3][indiceSommet1]=1;
+			present[indiceSommet2][indiceSommet5]=1;
+			present[indiceSommet5][indiceSommet2]=1;
+			present[indiceSommet4][indiceSommet6]=1;
+			present[indiceSommet6][indiceSommet4]=1;
+		}
 		
 		
 		/**System.out.println("Tableau Initial");
@@ -323,7 +326,7 @@ public class OPT extends TSPSolver {
 		System.out.println(opt4Poids);
 		
 		System.out.println("Min"+min); */
-		return matMin;
+		return present;
 	}
 	
 	//------------
@@ -332,29 +335,28 @@ public class OPT extends TSPSolver {
 	
 	/**
 	 * 
-	 * @param iteration
-	 * Nombre d'iteration desire
-	 * @return la solution apres iteration iterations de 3 opt
+	 * @param dureeMs
+	 * la duree pendant laquelle on fait trourner l algo
+	 * @return la solution apres dureeMs Millisecondes d iterations de 3 opt
 	 * @throws Exception
 	 */
-	public Solution OPTMain(int iteration) throws Exception {
-		/**Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
-		initialisation.getInitGene();
-		initialisation.getSolution().evaluate();
+	public Solution OPTMain(long dureeMs) throws Exception {
 		
-		Solution[] population = initialisation.creationPopulation();
-		for (int i=0;i<500;i++) {
-			population = Genetic.iterationGene(population);
-		}*/
-		
-		//int[][] matriceEdge = this.getInitOptPlusGene(population[0]);
 		int[][] matriceEdge = this.getInitOpt();
 		
-		for (int i=0;i<iteration;i++) {
+		long startTime = System.currentTimeMillis();
+		long spentTime = 0;
+		do
+		{
 			matriceEdge = this.getMatriceSuivante(matriceEdge);
+			// TODO
+			// Code a loop base on time here
+			spentTime = System.currentTimeMillis() - startTime;
+		}while(spentTime < (dureeMs) );
+		
+			
 			//System.out.println("Final");
 			//printMatrice(matriceEdge);
-		}
 		
 		int[] tableauSolution = this.trajet(matriceEdge);
 		for (int i=0;i<tableauSolution.length;i++) {
@@ -438,7 +440,7 @@ public class OPT extends TSPSolver {
 	 * @param tab 
 	 * Le tableau en question  
 	 */
-	private static void printTableau(int[] tab) {
+	private static void printTableau(long[] tab) {
 		String s = "{";
 		for (int i=0;i<tab.length-1;i++) {
 			s+=tab[i]+",";
