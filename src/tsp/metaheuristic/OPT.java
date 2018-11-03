@@ -28,7 +28,9 @@ public class OPT extends TSPSolver {
 	//--- Iinitialisation ---
 	//-----------------------
 	
-	/** Change m_solution pour qu'il soit égal au PCC */
+	/** 
+	 * Change m_solution pour qu'il soit égal au PCC
+	 *  */
 	public void	initOPT() throws Exception {
 		int nbVilles = this.getInstance().getNbCities();
 	
@@ -65,7 +67,12 @@ public class OPT extends TSPSolver {
 		}
 	}
 	
-	/** Cree la matrice des edges  avec 1 pour un edge et 0 pour rien*/
+	/** 
+	 * Cree la matrice des edges  avec 1 pour un edge et 0 pour rien
+	 * 
+	 * @return La matrice de 0 et 1 associée au PCC
+	 * @throws Exception
+	 * */
 	public int[][] getInitOpt() throws Exception {
 		this.initOPT();
 		int n = this.getInstance().getNbCities();
@@ -79,25 +86,23 @@ public class OPT extends TSPSolver {
 		return matriceEdge;
 		}
 	
-	public int[][] getInitOptPlusGene() throws Exception {
-		Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
-		initialisation.getInitGene();
-		initialisation.getSolution().evaluate();
-		
-		Solution[] population = initialisation.creationPopulation();
-		for (int i=0;i<250;i++) {
-			population = Genetic.iterationGene(population);
-		}
-		this.m_solution = population[0];
+	/**
+	 * 
+	 * @param Init
+	 * 				La solution d'initialisation
+	 * @return La matrice de 1 et de 0 associee a l initialisation
+	 * @throws Exception
+	 */
+	public int[][] getInitOptPlusGene(Solution Init) throws Exception {
 		
 		int n = this.getInstance().getNbCities();
 		int[][] matriceEdge = new int[n][n];
 		for (int i=0; i<n-1;i++) {
-			matriceEdge[this.getSolution().getCity(i)][this.getSolution().getCity(i+1)] = 1;
-			matriceEdge[this.getSolution().getCity(i+1)][this.getSolution().getCity(i)] = 1;
+			matriceEdge[Init.getCity(i)][Init.getCity(i+1)] = 1;
+			matriceEdge[Init.getCity(i+1)][Init.getCity(i)] = 1;
 		}
-		matriceEdge[this.getSolution().getCity(n-1)][0] = 1;
-		matriceEdge[0][this.getSolution().getCity(n-1)] = 1;
+		matriceEdge[Init.getCity(n-1)][0] = 1;
+		matriceEdge[0][Init.getCity(n-1)] = 1;
 		return matriceEdge;
 		}
 	
@@ -105,6 +110,13 @@ public class OPT extends TSPSolver {
 	//--- Iterations ---
 	//------------------
 	
+	/**
+	 * 
+	 * @param present
+	 * 	La matrice de la solution actuelle 
+	 * @return La matrice après une itération de 3 OPT
+	 * @throws Exception
+	 */
 	public int[][] getMatriceSuivante(int[][] present) throws Exception {
 		
 		int n = this.getInstance().getNbCities();
@@ -204,7 +216,7 @@ public class OPT extends TSPSolver {
 		matMin = opt3;
 	}
 		
-		int[][] opt4 = copyTableau(present);
+		/**int[][] opt4 = copyTableau(present);
 			opt4[indiceSommet1][indiceSommet2]=0;
 			opt4[indiceSommet2][indiceSommet1]=0;
 			opt4[indiceSommet3][indiceSommet4]=0;
@@ -278,7 +290,7 @@ public class OPT extends TSPSolver {
 		if (opt7Poids<min) {
 			min = opt7Poids;
 			matMin = opt7;
-		}	
+		}	*/
 		
 		
 		/**System.out.println("Tableau Initial");
@@ -318,7 +330,24 @@ public class OPT extends TSPSolver {
 	//--- Main ---
 	//------------
 	
+	/**
+	 * 
+	 * @param iteration
+	 * Nombre d'iteration desire
+	 * @return la solution apres iteration iterations de 3 opt
+	 * @throws Exception
+	 */
 	public Solution OPTMain(int iteration) throws Exception {
+		/**Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
+		initialisation.getInitGene();
+		initialisation.getSolution().evaluate();
+		
+		Solution[] population = initialisation.creationPopulation();
+		for (int i=0;i<500;i++) {
+			population = Genetic.iterationGene(population);
+		}*/
+		
+		//int[][] matriceEdge = this.getInitOptPlusGene(population[0]);
 		int[][] matriceEdge = this.getInitOpt();
 		
 		for (int i=0;i<iteration;i++) {
@@ -340,7 +369,14 @@ public class OPT extends TSPSolver {
 	//--- Fonctions Annexes ---
 	//-------------------------
 	
-	/** Test si un element est dans un tableau  */
+
+	/**
+	 * 
+	 * @param element
+	 * @param tableau
+	 * @return True si l element est dans le tableau
+	 * 		   false sinon
+	 */
 	private static boolean testInt(int element,int[] tableau) {
 		boolean in = false;
 		int i = 0;
@@ -353,7 +389,13 @@ public class OPT extends TSPSolver {
 		return in;
 	}
 
-	/** Transforme la matrice des edge en trajet des villes */
+	/**
+	 * 
+	 * @param edge 
+	 * La matrice correspondant au trajet
+	 * @return Un tableau ranger dans l'ordre de passage du voyageur
+	 * @throws Exception
+	 */
 	public int[] trajet(int[][] edge) throws Exception {
 		int[] trajet = new int[edge.length];
 		trajet[edge.length-1]=-1;
@@ -374,7 +416,12 @@ public class OPT extends TSPSolver {
 		return trajet;
 	}
 
-	/** Renvoies le poids d'un trajet */
+	/**
+	 * 
+	 * @param edge
+	 * La matrice correspondant au trajet
+	 * @return La distance du trajet 
+	 */
 	public long poids(int[][] edge) {
 		long[][] distance = this.getInstance().getDistances();
 		long S = 0;
@@ -386,6 +433,11 @@ public class OPT extends TSPSolver {
 		return S/2;
 	}
 	
+	/** Affiche le tableau dans la console
+	 * 
+	 * @param tab 
+	 * Le tableau en question  
+	 */
 	private static void printTableau(int[] tab) {
 		String s = "{";
 		for (int i=0;i<tab.length-1;i++) {
@@ -395,6 +447,11 @@ public class OPT extends TSPSolver {
 		System.out.println(s);
 	}
 	
+	/**
+	 * Affiche la matrice dans la console
+	 * @param matrix 
+	 * La matrice en question 
+	 */
 	private static void printMatrice(int[][] matrix) {
 		for (int i = 0; i < matrix.length; i++) {
 		    for (int j = 0; j < matrix[i].length; j++) {
@@ -403,7 +460,16 @@ public class OPT extends TSPSolver {
 		    System.out.println();
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param sommetPresent 
+	 *  Le sommet present du voyageur
+	 * @param matriceEdge 
+	 *  La matrice du trajet 
+	 * @return L indice de la ville suivante
+	 * @throws Exception
+	 */
 	private int getSuivant(int sommetPresent, int[][] matriceEdge) throws Exception {
 		int indice = 0;
 		int[] trajet = trajet(matriceEdge);
@@ -413,6 +479,11 @@ public class OPT extends TSPSolver {
 		return trajet[(indice+1)%trajet.length];
 	}
 
+	/**
+	 * 
+	 * @param tableau
+	 * @return une copie de ce tableau
+	 */
 	private int[][] copyTableau(int[][] tableau) {
 		int[][] res = new int[tableau.length][tableau.length];
 		for (int i=0;i<tableau.length;i++) {
