@@ -123,15 +123,15 @@ public class OPT extends TSPSolver {
 		int[] trajet = trajet(present);
 		
 		// 1) Avoir les 3 edges
-		int indiceSommet1 = (int)(Math.random() *(n - 1));
+		int indiceSommet1 = (int)(Math.random() *(n));
 		
-		int indiceSommet3 = (int)(Math.random() *(n - 1));
+		int indiceSommet3 = (int)(Math.random() *(n));
 		while (indiceSommet1 == indiceSommet3) {
-			indiceSommet3 =  (int)(Math.random() *(n - 1));
+			indiceSommet3 =  (int)(Math.random() *(n));
 		}
-		int indiceSommet5 = (int)(Math.random() *(n - 1));
+		int indiceSommet5 = (int)(Math.random() *(n));
 		while (indiceSommet1 == indiceSommet5 || indiceSommet3 == indiceSommet5) {
-			indiceSommet5 = (int)(Math.random() *(n - 1));
+			indiceSommet5 = (int)(Math.random() *(n));
 		}
 		
 		int[] tIndiceSommet = new int[3];
@@ -158,9 +158,9 @@ public class OPT extends TSPSolver {
 			}
 		}
 	
-		indiceSommet1 = trajet[tIndiceSommet[0]];
-		indiceSommet3 = trajet[tIndiceSommet[1]];
-		indiceSommet5 = trajet[tIndiceSommet[2]];
+		indiceSommet1 = trajet[tIndiceSommet[0]%n];
+		indiceSommet3 = trajet[tIndiceSommet[1]%n];
+		indiceSommet5 = trajet[tIndiceSommet[2]%n];
 		
 		int indiceSommet2 = getSuivant(indiceSommet1, present);
 		int indiceSommet4 = getSuivant(indiceSommet3, present);
@@ -346,15 +346,25 @@ public class OPT extends TSPSolver {
 		
 		long startTime = System.currentTimeMillis();
 		long spentTime = 0;
+		int nbIterations = 0;
+		int iterations = 0;
+		long poids;
 		do
 		{
+			poids = poids(matriceEdge);
 			matriceEdge = this.getMatriceSuivante(matriceEdge);
-			// TODO
-			// Code a loop base on time here
+			if (poids > poids(matriceEdge)) {
+				iterations = 0;
+				//System.out.println("non");
+			} else {
+				iterations++;
+				//System.out.println("oui");
+			}
+			nbIterations++;
 			spentTime = System.currentTimeMillis() - startTime;
-		}while(spentTime < (dureeMs) );
+		}while(spentTime < (dureeMs));
 		
-			
+			System.out.println(nbIterations);
 			//System.out.println("Final");
 			//printMatrice(matriceEdge);
 		
