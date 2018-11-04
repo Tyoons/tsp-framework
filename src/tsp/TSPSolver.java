@@ -92,19 +92,28 @@ public class TSPSolver {
 	this.m_solution.evaluate();*/
 	
 	
+			// Decomenter pour Genetique //
 	/**Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
 	initialisation.getInitGene();
 	initialisation.getSolution().evaluate();
 	
 	Solution[] population = initialisation.creationPopulation();
-	for (int i=0;i<200;i++) {
+	long startTime = System.currentTimeMillis();
+	long spentTime = 0;
+	do
+	{
 		population = Genetic.iterationGene(population);
-	}
+		spentTime = System.currentTimeMillis() - startTime;
+	}while(spentTime < (60000) );
+
 	this.m_solution = population[0];*/
 	
+	
+		// Decomenter pour 3 OPT //
+
 	//this.m_solution = initialisation.getSolution();
 	/**OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
-	this.m_solution = initialisation.OPTMain(59000);
+	this.m_solution = initialisation.OPTMain(60000);
 	this.m_solution.evaluate();*/
 	
 	
