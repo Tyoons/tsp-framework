@@ -1,9 +1,6 @@
 package tsp.metaheuristic;
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import tsp.*;
 
 public class Genetic extends TSPSolver{
