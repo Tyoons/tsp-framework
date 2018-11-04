@@ -3,6 +3,7 @@ package tsp.metaheuristic;
 import java.util.ArrayList;
 
 import tsp.Instance;
+import tsp.Solution;
 import tsp.TSPSolver;
 
 public class Clustering extends TSPSolver  {
@@ -200,6 +201,49 @@ public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 	
 }
 
+public static Solution assemblage(Solution[] solutions, Instance inst) throws Exception {
+	Solution sol = new Solution(inst);
+	Solution mere = solutions[0];
+	int k =1;
+	int pos = 0;
+	for( int i =0; i< mere.getInstance().getNbCities(); i++) {
+		if(mere.getCity(i)<inst.getNbCities()) {
+			sol.setCityPosition(mere.getCity(i), pos);
+			pos++;
+		}
+		else {
+			Solution groupe = solutions [k];
+			int [] ordonne = new int[groupe.getInstance().getNbCities()];
+			ordonne = ordonner( inst,groupe, sol.getCity(i-1));
+			k++;
+			for(int ind = 0; ind<ordonne.length; ind++) {
+				sol.setCityPosition(ordonne[ind], pos);
+				pos++;
+			}
+		}
+	}
+	return sol;
+}
+
+public static int[] ordonner ( Instance inst,Solution solution, int precedent) throws Exception {
+	int n = solution.getInstance().getNbCities();
+	int[] ordonne = new int[n];
+	long distance = 0;
+	long distanceMin = inst.getDistances(solution.getCity(0), precedent);
+	int indice = 0;
+	for(int i =0 ; i<n; i++) {
+		distance = inst.getDistances(solution.getCity(i), precedent);
+		if(distance< distanceMin) {
+			distanceMin = distance;
+			indice = i;
+		}
+	}
+	for(int i = 0; i<n; i++) {
+		ordonne[i] = solution.getCity(indice);
+		indice = (indice+1)%n;
+	}
+	return ordonne;
+}
 }
 
 

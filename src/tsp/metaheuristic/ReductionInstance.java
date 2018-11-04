@@ -275,6 +275,30 @@ public class ReductionInstance  extends TSPSolver {
 		return listeInstance;
 		
 	}
+public static Solution assemblage(Solution[] solutions, Instance inst) throws Exception {
+	Solution sol = new Solution(inst);
+	Solution mere = solutions[0];
+	int k =1;
+	for( int i =0; i< mere.getInstance().getNbCities(); i++) {
+		if(mere.getCity(i)<inst.getNbCities()) {
+			sol.setCityPosition(mere.getCity(i), i);
+		}
+		else {
+			Solution groupe = solutions [k];			
+			int	suivant = mere.getCity(i+1);	
+			int [] ordonne = ordonner( inst,groupe, sol.getCity(i-1), suivant);
+			k++;
+		}
+	}
+	return sol;
+	
+	
+}
+public static int[] ordonner ( Instance inst,Solution solution, int precedent, int suivant) {
+	int[] ordonne = new int[solution.getInstance().getNbCities()];
+	
+	return ordonne;
+}
 }
 
 
