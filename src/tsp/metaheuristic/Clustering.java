@@ -13,7 +13,11 @@ public class Clustering extends TSPSolver  {
 		// TODO Auto-generated constructor stub
 	}
 
-	
+	/**
+	 * 
+	 * @param inst une instance dont on vuet calculer la distance moyenne entre les sommets
+	 * @return  un double : la dstance moyenne
+	 */
 	public static double d_moy(Instance inst) {
 		long[][] distances = inst.getDistances();
 		double dmoy;
@@ -28,7 +32,12 @@ public class Clustering extends TSPSolver  {
 		
 	return dmoy/(n*(n+1)/2);
 	}
-
+/**
+ * 
+ * @param inst : l'instance dont on veut calculer le barycentre
+ * @return un tableau de doubles : barycentre[0] contient la position en X et barycentre[1] celle en Y
+ * @throws Exception
+ */
 	public static double[] barycentre(Instance inst) throws Exception {
 		double [] barycentre= new double[2];
 		double X = 0;
@@ -45,7 +54,13 @@ public class Clustering extends TSPSolver  {
 		return barycentre;
 	}
 
-	
+	/**
+	 * 
+	 * @param inst l'instance dont on veut copier certains indices
+	 * @param labels les indices qui nous nterressent
+	 * @return une instance qui ne contient que les sommets donc le nom correspond à labels
+	 * @throws Exception
+	 */
 	public static Instance nouveauGroupe(Instance inst, ArrayList<String> labels) throws Exception {
 		Instance nouveauGroupe = new  Instance(inst.getFileName(), inst.getType());
 		int i = 0;
@@ -55,7 +70,7 @@ public class Clustering extends TSPSolver  {
 		double [] m_y = new double[n];
 		long[][] m_distances = new long[n][n];
 		String[] m_labels = new String[n];
-		while(i<n) {
+		while(i<n && k<inst.getNbCities()) {
 			if(nouveauGroupe.getLabel(k).equals(labels.get(i))) {
 				m_x[i]=nouveauGroupe.getX(k);
 				m_y[i] = nouveauGroupe.getY(k);
@@ -84,10 +99,16 @@ public class Clustering extends TSPSolver  {
 		return nouveauGroupe;
 		
 	}
-
+/**
+ * 
+ * @param inst l'instance dont on veut retier les sommets choisis
+ * @param labels les noms des sommets à retirer
+ * @throws Exception
+ */
 public static void retirer(Instance inst, ArrayList<String>labels )throws Exception {
 	int i = 0;
 	int k =0;
+	int w = 0;
 	int n = labels.size();
 	int m = inst.getNbCities();
 	int l = m-n;
@@ -96,12 +117,13 @@ public static void retirer(Instance inst, ArrayList<String>labels )throws Except
 	long[][] m_distances = new long[l][l];
 	String[] m_labels = new String[l];
 	
-	while(i<n) {
+	while(i<n && k<m && w<l) {
 		if(!inst.getLabel(k).equals(labels.get(i))) {
-			m_x[k]=inst.getX(k);
-			m_y[k] = inst.getY(k);
-			m_labels[k] = inst.getLabel(k);
+			m_x[w]=inst.getX(k);
+			m_y[w] = inst.getY(k);
+			m_labels[w] = inst.getLabel(k);
 			k++;
+			w++;
 			
 		}
 		else {
@@ -119,13 +141,19 @@ public static void retirer(Instance inst, ArrayList<String>labels )throws Except
 		}
 	
 }
-	inst.setNbCities(n);
+	inst.setNbCities(l);
 	inst.setM_distances(m_distances);
 	inst.setM_x(m_x);
 	inst.setM_y(m_y);
 	inst.setM_labels(m_labels);
 }
-
+/**
+ * 
+ * @param inst l'instance à laquelle on veut ajouter un nouveau groupe de sommets
+ * @param groupe l'instance qui correspond aux groupe de sommets à ajouter
+ * @param indice le noms que l'on va donner à ce nouveau groupe
+ * @throws Exception
+ */
 public static void ajouter(Instance inst, Instance groupe, int indice) throws Exception {
 	int n = inst.getNbCities()+1;
 	double[] barycentre = barycentre(groupe);
@@ -157,9 +185,15 @@ public static void ajouter(Instance inst, Instance groupe, int indice) throws Ex
 	inst.setM_labels(m_labels);
 	
 }
-
+/**
+ * 
+ * @param inst l'instance que l'on veut réduire
+ * @return une liste d'instances. La première correspond au niveau le plus "dézoomé" et les suivantes correspondent aux petits mondes suivants.
+ * @throws Exception
+ */
 public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 	ArrayList<Instance> listeInstance = new ArrayList<Instance>();
+	listeInstance.add(inst);
 	int nb_cities = inst.getNbCities();
 	int nb_monde = listeInstance.size();
 	int n = listeInstance.get(0).getNbCities();
@@ -167,17 +201,20 @@ public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 	boolean ajout = false;
 	for (int i = 0; i<n;i++) {
 		ArrayList<String> indexes = new ArrayList<String>();
-		for(int j =0;j<n;j++) {
+		for(int j =i+1;j<n;j++) {
 			
 				for(int k =0; k< indexes.size();k++){
-					if(listeInstance.get(0).getDistances(Integer.parseInt(indexes.get(k)),j)< dmoy/5) {
+					if(listeInstance.get(0).getDistances(Integer.parseInt(indexes.get(k)),j)< dmoy/10) {
+						System.out.println(listeInstance.get(0).getLabel(j) + "," +j + "," + listeInstance.get(0).getNbCities());
+
+						if(!indexes.contains(listeInstance.get(0).getLabel(j)) &&  Integer.parseInt(listeInstance.get(0).getLabel(j)) <n ){
 						indexes.add(listeInstance.get(0).getLabel(j));
-						
+					}
 					}
 				}
 			
 			
-			if(listeInstance.get(0).getDistances(i, j) < dmoy/5) {
+			if(listeInstance.get(0).getDistances(i, j) < dmoy/10 && !indexes.contains(listeInstance.get(0).getLabel(j))  &&  Integer.parseInt(listeInstance.get(0).getLabel(j)) <n ) {
 				indexes.add(listeInstance.get(0).getLabel(j));
 				ajout = true;
 				
@@ -200,7 +237,14 @@ public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 	return listeInstance;
 	
 }
-
+/**
+ * 
+ * @param solutions Le tableau des solutions à assembler
+ * @param inst L'insatnce à partir de laquelle les solutions ont été calculéés
+ * @return une solution qui correspond à l'assemblage des solutions : on raccorde un monde au suivant par le plus proche sommet,
+ *  dans l'ordre défini par la solution "dézoommée" stockée dans Solution[0];
+ * @throws Exception
+ */
 public static Solution assemblage(Solution[] solutions, Instance inst) throws Exception {
 	Solution sol = new Solution(inst);
 	Solution mere = solutions[0];
@@ -224,7 +268,15 @@ public static Solution assemblage(Solution[] solutions, Instance inst) throws Ex
 	}
 	return sol;
 }
-
+/**
+ * 
+ * @param inst l'instance à partir de laquelle la solution à été établie
+ * @param solution la solution d'un monde que l'on veut raccorder à la solution dézoomée
+ * @param precedent le sommet précédent dans la solution dézoomée
+ * @return une liste d'indices qui commence par le sommet le plus proche de precedent,
+ * et qui contient tous les sommets dans l'ordre établit par la résolution
+ * @throws Exception
+ */
 public static int[] ordonner ( Instance inst,Solution solution, int precedent) throws Exception {
 	int n = solution.getInstance().getNbCities();
 	int[] ordonne = new int[n];
