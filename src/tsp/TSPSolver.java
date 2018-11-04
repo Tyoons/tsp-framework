@@ -1,4 +1,5 @@
 package tsp;
+import tsp.heuristic.NearestInsertion;
 import tsp.metaheuristic.*;
 /**
  * 
@@ -82,6 +83,11 @@ public class TSPSolver {
 		this.getSolution().setCityPosition(i,i);
 	} 
 	this.m_solution.evaluate();*/
+		
+	NearestInsertion i=new NearestInsertion(this.getInstance(),this.getTimeLimit());
+	this.m_solution=i.Nearest();
+	this.m_solution.evaluate();
+	
 	
 	/**Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
 	initialisation.getInitGene();
@@ -93,10 +99,10 @@ public class TSPSolver {
 	}
 	this.m_solution = population[0];*/
 	
-	//this.m_solution = initialisation.getSolution();
+	/*this.m_solution = initialisation.getSolution();
 	OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
 	this.m_solution = initialisation.OPTMain(59000);
-	this.m_solution.evaluate();
+	this.m_solution.evaluate();*/
 	
 	//this.m_solution=initialisation.getSolution();
 		
