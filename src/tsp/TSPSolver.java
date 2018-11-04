@@ -112,14 +112,14 @@ public class TSPSolver {
 		// Decomenter pour 3 OPT //
 
 	//this.m_solution = initialisation.getSolution();
-	/**OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
+	OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
 	this.m_solution = initialisation.OPTMain(60000);
-	this.m_solution.evaluate();*/
+	this.m_solution.evaluate();
 	
 	
 	// opt  mais avec reduction de graph
 	
-	ArrayList<Instance> Instances =  tsp.metaheuristic.Clustering.reduction(this.m_instance);
+	/**ArrayList<Instance> Instances =  tsp.metaheuristic.Clustering.reduction(this.m_instance);
 	int n = Instances.size();
 	Solution[] sol = new Solution[n];
 	for(int i = 0; i<n; i++) {
@@ -128,6 +128,7 @@ public class TSPSolver {
 	}
 	this.m_solution = tsp.metaheuristic.Clustering.assemblage(sol, this.getInstance());
 	this.m_solution.evaluate();
+	*/
 	
 			
 	
