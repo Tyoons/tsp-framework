@@ -1,7 +1,5 @@
 package tsp.heuristic;
-import java.util.ArrayList; 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;  
 import tsp.Instance;
 import tsp.Solution;
 
@@ -15,7 +13,7 @@ import tsp.TSPSolver;
 public class NearestInsertion extends TSPSolver{
 	
 	/**
-	 * Tour: Une ArrayList<Integer> contenant les villes insérées une par une et qui la solution
+	 * Tour: Une ArrayList<Integer> contenant les villes insérées une par une et qui construit la solution
 	 */
 	
 	private ArrayList<Integer> Tour;
@@ -139,15 +137,15 @@ public class NearestInsertion extends TSPSolver{
 		return this.OptimisationInsertionNoeud(sol);
 	}
 	/**
-	 * Réalise une optimisation par insertion de Ville dans le Tour
+	 * Réalise une optimisation par insertion de Villes dans le Tour
 	 * @param solution La solution à optimiser
-	 * @return
+	 * @return Une solution optimisée 
 	 * @throws Exception
 	 */
 	public Solution OptimisationInsertionNoeud(Solution solution) throws Exception {
 		ArrayList<Integer> TourOpt=new ArrayList<Integer>();
 		for(int k=0;k<this.getInstance().getNbCities()+1;k++) {
-			TourOpt.add(k, solution.getCity(k));
+			TourOpt.add(k, solution.getCity(k)); //Transforme la solution en ArrayList
 		}
 		boolean OptimisationPossible=true;
 		int boucle=0;

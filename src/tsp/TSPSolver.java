@@ -92,7 +92,7 @@ public class TSPSolver {
 	this.m_solution.evaluate();*/
 
 	
-			// Decomenter pour Genetique //
+			// Décommenter pour Genetique //
 	/**Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
 	initialisation.getInitGene();
 	initialisation.getSolution().evaluate();
@@ -109,14 +109,14 @@ public class TSPSolver {
 	this.m_solution = population[0];*/
 	
 	
-		// Decomenter pour 3 OPT //
+		// Décommenter pour 3 OPT //
 
 	/**OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
 	this.m_solution = initialisation.OPTMain(60000);
 	this.m_solution.evaluate();*/
 	
 	
-	// opt  mais avec reduction de graph
+	// 3-OPT avec réduction de graphe
 	
 	ArrayList<Instance> Instances =  tsp.metaheuristic.Clustering.reduction(this.m_instance);
 	int n = Instances.size();
