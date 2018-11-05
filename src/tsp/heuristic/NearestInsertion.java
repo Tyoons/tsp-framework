@@ -81,7 +81,6 @@ public class NearestInsertion extends TSPSolver{
 	
 	public int Min(ArrayList<Integer> liste, ArrayList<Integer> tab){
 		long min=1000000;
-		System.out.println(tab);
 		int j=-1;
 		for(int l:liste){
 			long[] Distance=this.getInstance().getDistances()[l];
@@ -127,7 +126,6 @@ public class NearestInsertion extends TSPSolver{
 		int i=3;
 		while(i<=(this.getInstance().getNbCities())) {
 			int VilleProche=this.Min(Tour, VillesPasEncoreVisitées); //Ville à ajouter
-			System.out.println(VilleProche);
 			VillesPasEncoreVisitées.remove(VillesPasEncoreVisitées.indexOf(VilleProche)); //Retire VilleProche
 			int Point=this.InsertionArc(this.Tour, VilleProche); //Détermination du point d'insertion de VilleProche
 			int indice=this.Tour.indexOf(Point); //Indice du point d'intersection

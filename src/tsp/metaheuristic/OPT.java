@@ -108,6 +108,18 @@ public class OPT extends TSPSolver {
 		return matriceEdge;
 		}
 	
+	public int[][] getInitOptSol(Solution Init) throws Exception {
+		int n = this.getInstance().getNbCities();
+		int[][] matriceEdge = new int[n][n];
+		for (int i=0; i<n-1;i++) {
+			matriceEdge[Init.getCity(i)][Init.getCity(i+1)] = 1;
+			matriceEdge[Init.getCity(i+1)][Init.getCity(i)] = 1;
+		}
+		matriceEdge[Init.getCity(n-1)][0] = 1;
+		matriceEdge[0][Init.getCity(n-1)] = 1;
+		return matriceEdge;
+		}
+	
 	//------------------
 	//--- Iterations ---
 	//------------------
@@ -324,20 +336,12 @@ public class OPT extends TSPSolver {
 		int[][] min = copyTableau(matriceEdge);
 		do
 		{
-			if (iterations >=  nbIterations*0.05) {
-				if (poids(min) > poids(matriceEdge)) {
-					min = copyTableau(matriceEdge);
-				}
-				matriceEdge = this.getInitOptPCC();
-				iterations = 0;
+			poids = poids(matriceEdge);
+			matriceEdge = this.getMatriceSuivante(matriceEdge);
+			if (poids > poids(matriceEdge)) {
+				iterations = 0;		
 			} else {
-				poids = poids(matriceEdge);
-				matriceEdge = this.getMatriceSuivante(matriceEdge);
-				if (poids > poids(matriceEdge)) {
-					iterations = 0;		
-				} else {
-					iterations++;
-			}
+				iterations++;
 			}
 			nbIterations++;
 			spentTime = System.currentTimeMillis() - startTime;
@@ -348,7 +352,43 @@ public class OPT extends TSPSolver {
 			//System.out.println("Final");
 			//printMatrice(matriceEdge);
 		
-		int[] tableauSolution = this.trajet(min);
+		int[] tableauSolution = this.trajet(matriceEdge);
+		for (int i=0;i<tableauSolution.length;i++) {
+			this.getSolution().setCityPosition(tableauSolution[i], i);
+		}
+		this.getSolution().setCityPosition(0, tableauSolution.length);
+		
+		return this.getSolution();
+	}
+	
+public Solution OPTMain2(long dureeMs,Solution Init) throws Exception {
+		
+		int[][] matriceEdge = this.getInitOptSol(Init);
+		long startTime = System.currentTimeMillis();
+		long spentTime = 0;
+		double nbIterations = 3*Math.pow(10, 10)*Math.pow(this.getInstance().getNbCities(), -2.08);
+		int iterations = 0;
+		long poids;
+		int[][] min = copyTableau(matriceEdge);
+		do
+		{
+			poids = poids(matriceEdge);
+			matriceEdge = this.getMatriceSuivante(matriceEdge);
+			if (poids > poids(matriceEdge)) {
+				iterations = 0;		
+			} else {
+				iterations++;
+			}
+			nbIterations++;
+			spentTime = System.currentTimeMillis() - startTime;
+		}while(spentTime < (dureeMs));
+		// j'ai commenté ton systeme.out.println on doit pas en faire 
+		// Mayeul
+			//System.out.println(nbIterations);
+			//System.out.println("Final");
+			//printMatrice(matriceEdge);
+		
+		int[] tableauSolution = this.trajet(matriceEdge);
 		for (int i=0;i<tableauSolution.length;i++) {
 			this.getSolution().setCityPosition(tableauSolution[i], i);
 		}
