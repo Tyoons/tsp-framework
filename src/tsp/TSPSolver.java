@@ -1,6 +1,9 @@
 package tsp;
+import java.util.ArrayList;
+
 import tsp.heuristic.NearestInsertion;
 import tsp.metaheuristic.*;
+import tsp.metaheuristic.Clustering;
 /**
  * 
  * This class is the place where you should enter your code and from which you can create your own objects.
@@ -87,7 +90,7 @@ public class TSPSolver {
 	/**NearestInsertion i=new NearestInsertion(this.getInstance(),this.getTimeLimit());
 	this.m_solution=i.Nearest();
 	this.m_solution.evaluate();*/ 
-	
+
 	
 			// Decomenter pour Genetique //
 	/**Genetic initialisation = new Genetic(this.getInstance(),this.getTimeLimit());
@@ -108,10 +111,27 @@ public class TSPSolver {
 	
 		// Decomenter pour 3 OPT //
 
-	/*this.m_solution = initialisation.getSolution();
+	//this.m_solution = initialisation.getSolution();
 	OPT initialisation = new OPT(this.getInstance(), this.getTimeLimit());
 	this.m_solution = initialisation.OPTMain(60000);
-	this.m_solution.evaluate();*/
+	this.m_solution.evaluate();
+	
+	
+	// opt  mais avec reduction de graph
+	
+	/**ArrayList<Instance> Instances =  tsp.metaheuristic.Clustering.reduction(this.m_instance);
+	int n = Instances.size();
+	Solution[] sol = new Solution[n];
+	for(int i = 0; i<n; i++) {
+		OPT initialisation = new OPT(Instances.get(i), this.getTimeLimit());
+		sol[i] = initialisation.OPTMain((59000/this.getInstance().getNbCities())*Instances.get(i).getNbCities());
+	}
+	this.m_solution = tsp.metaheuristic.Clustering.assemblage(sol, this.getInstance());
+	this.m_solution.evaluate();
+	*/
+	
+			
+	
 	
 	//this.m_solution=initialisation.getSolution();
 		
