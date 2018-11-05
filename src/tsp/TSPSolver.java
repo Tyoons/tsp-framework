@@ -84,9 +84,9 @@ public class TSPSolver {
 	} 
 	this.m_solution.evaluate();*/
 		
-	NearestInsertion i=new NearestInsertion(this.getInstance(),this.getTimeLimit());
+	/**NearestInsertion i=new NearestInsertion(this.getInstance(),this.getTimeLimit());
 	this.m_solution=i.Nearest();
-	this.m_solution.evaluate();
+	this.m_solution.evaluate();*/ 
 	
 	
 			// Decomenter pour Genetique //
