@@ -18,9 +18,7 @@ public class Fourmis extends Environnement{
 		 }
 		 this.TempsDeParcours=0;
 		 this.EtatFourmi=0;
-		/* this.borneMin=0;
-		 this.evaporation=(float) 0.2;
-		 this.pheromones=new float[n][n]; */
+
 	}
 
    private List<Integer> VillesVisitées;        // toutes les villes visitées par la fourmi
@@ -29,8 +27,7 @@ public class Fourmis extends Environnement{
    private int EtatFourmi;  // état de la fourmi, en route, en retour (-1 Retour, 0 Rien; 1 En Route; 2 Arrivé; 3 Supprimée)
    private int VilleOrigine;
    private int VilleDestination;
-   //private long PositionSurArcActuel;
-   //private long LongueurArcActuel;
+
    
  
 
@@ -42,8 +39,7 @@ public void findNextSearchDestination() throws Exception { // détermination du 
             EtatFourmi = 1;
             VilleOrigine = 0;
             VilleDestination = Destination;
-          //PositionSurArcActuel = 0;
-          //LongueurArcActuel =this.getInstance().getDistances(0,VilleDestination);
+
         }
 	else {
 		if(this.EtatFourmi==1) { // la fourmi est sur le graphe
@@ -54,8 +50,7 @@ public void findNextSearchDestination() throws Exception { // détermination du 
                 this.EtatFourmi = -1;
                 this.VilleOrigine=0;
                 this.VilleDestination=this.VillesVisitées.size()-1; // on s'intéresse maintenant aux indexs des villes!
-                //this.LongueurArcActuel=this.getInstance().getDistances(this.VillesVisitées.get(VilleOrigine), this.VillesVisitées.get(VilleDestination));
-                //this.PositionSurArcActuel=this.LongueurArcActuel;
+
             }
             else {
             	VillesVisitées.add(this.VilleDestination);
@@ -63,8 +58,7 @@ public void findNextSearchDestination() throws Exception { // détermination du 
             	this.VilleOrigine = this.VilleDestination;
             	int Destination = getNearCity(this.VilleDestination,this.VillesPasEncoreVisitées);
             	this.VilleDestination = Destination; 
-            	//this.LongueurArcActuel=this.getInstance().getDistances(VilleOrigine, VilleDestination);
-            	//this.PositionSurArcActuel=0;
+
             }
         }
 		else {
@@ -83,30 +77,12 @@ public void findNextSearchDestination() throws Exception { // détermination du 
 					this.pheromones[this.VillesVisitées.get(VilleDestination)][this.VillesVisitées.get(VilleOrigine)]= super.facteur/this.TempsDeParcours;
 					this.VilleOrigine=this.VilleDestination;
 					this.VilleDestination=this.VilleOrigine-1;
-					//this.LongueurArcActuel=this.getInstance().getDistances(VilleOrigine, VilleDestination);
-					//this.PositionSurArcActuel=this.LongueurArcActuel;
+
 				}
 			}
 		}
 }
 }
-
-  /* public void frame() throws Exception{ //Vérifié
-	    switch(this.EtatFourmi){
-	        case 1:{
-	            this.TempsDeParcours ++;
-	        }
-	        case -1:{
-	        	this.PositionSurArcActuel++;             
-	            if (this.PositionSurArcActuel >= this.LongueurArcActuel) {
-	            	this.findNextSearchDestination();
-	            }
-	        }
-	        case 0:{
-	            this.findNextSearchDestination();             
-	        }
-	    }
-   }*/
 
 private int getNearCity(int i,List<Integer> V) throws Exception {
 	    // méthode de la règle aléatoire de transition proportionnelle
