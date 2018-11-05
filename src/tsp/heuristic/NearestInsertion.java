@@ -89,7 +89,7 @@ public class NearestInsertion extends TSPSolver{
 		for(int k=0;k<this.Tour.size()-1;k++) {
 			sol.setCityPosition(this.Tour.get(k), k);
 		}
-		return this.OptimisationInsertionNoeud(sol);
+		return sol;
 	}
 	
 	public Solution OptimisationInsertionNoeud(Solution solution) throws Exception {

@@ -1,4 +1,5 @@
 package tsp.metaheuristic;
+import tsp.heuristic.*;
 import java.util.ArrayList;
 
 import tsp.Instance;
@@ -93,8 +94,9 @@ public class OPT extends TSPSolver {
 	 * @return La matrice de 1 et de 0 associee a l initialisation
 	 * @throws Exception
 	 */
-	public int[][] getInitOptPlusGene(Solution Init) throws Exception {
-		
+	public int[][] getInitOptPCC() throws Exception {
+		NearestInsertion in=new NearestInsertion(this.getInstance(),this.getTimeLimit());
+		Solution Init = in.Nearest();
 		int n = this.getInstance().getNbCities();
 		int[][] matriceEdge = new int[n][n];
 		for (int i=0; i<n-1;i++) {
@@ -296,36 +298,7 @@ public class OPT extends TSPSolver {
 		}
 		
 		
-		/**System.out.println("Tableau Initial");
-		printMatrice(present);
-		printTableau(trajet);
-		System.out.println("Indice "+indiceSommet1+" Indice "+indiceSommet2);
-		System.out.println("Indice "+indiceSommet3+" Indice "+indiceSommet4);
-		System.out.println("Indice "+indiceSommet5+" Indice "+indiceSommet6);
 		
-		/**
-		System.out.println("Tableau 1");
-		printMatrice(opt1);
-		printTableau(trajet(opt1));
-		System.out.println(opt1Poids);
-		
-		System.out.println("Tableau 2");
-		printMatrice(opt2);
-		printTableau(trajet(opt2));
-		System.out.println(opt2Poids);
-		
-		System.out.println("Tableau 3");
-		printMatrice(opt3);
-		printTableau(trajet(opt3));
-		System.out.println(opt3Poids);
-		
-		
-		System.out.println("Tableau 4");
-		printMatrice(opt4);
-		printTableau(trajet(opt4));
-		System.out.println(opt4Poids);
-		
-		System.out.println("Min"+min); */
 		return present;
 	}
 	
@@ -342,22 +315,29 @@ public class OPT extends TSPSolver {
 	 */
 	public Solution OPTMain(long dureeMs) throws Exception {
 		
-		int[][] matriceEdge = this.getInitOpt();
+		int[][] matriceEdge = this.getInitOptPCC();
 		long startTime = System.currentTimeMillis();
 		long spentTime = 0;
-		int nbIterations = 0;
+		double nbIterations = 3*Math.pow(10, 10)*Math.pow(this.getInstance().getNbCities(), -2.08);
 		int iterations = 0;
 		long poids;
+		int[][] min = copyTableau(matriceEdge);
 		do
 		{
-			poids = poids(matriceEdge);
-			matriceEdge = this.getMatriceSuivante(matriceEdge);
-			if (poids > poids(matriceEdge)) {
+			if (iterations >=  nbIterations*0.05) {
+				if (poids(min) > poids(matriceEdge)) {
+					min = copyTableau(matriceEdge);
+				}
+				matriceEdge = this.getInitOptPCC();
 				iterations = 0;
-				//System.out.println("non");
 			} else {
-				iterations++;
-				//System.out.println("oui");
+				poids = poids(matriceEdge);
+				matriceEdge = this.getMatriceSuivante(matriceEdge);
+				if (poids > poids(matriceEdge)) {
+					iterations = 0;		
+				} else {
+					iterations++;
+			}
 			}
 			nbIterations++;
 			spentTime = System.currentTimeMillis() - startTime;
@@ -368,7 +348,7 @@ public class OPT extends TSPSolver {
 			//System.out.println("Final");
 			//printMatrice(matriceEdge);
 		
-		int[] tableauSolution = this.trajet(matriceEdge);
+		int[] tableauSolution = this.trajet(min);
 		for (int i=0;i<tableauSolution.length;i++) {
 			this.getSolution().setCityPosition(tableauSolution[i], i);
 		}
