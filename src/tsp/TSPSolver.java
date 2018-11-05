@@ -123,11 +123,12 @@ public class TSPSolver {
 	Solution[] sol = new Solution[n];
 	for(int i = 0; i<n; i++) {
 		OPT initialisation = new OPT(Instances.get(i), this.getTimeLimit());
-		sol[i] = initialisation.OPTMain((39000/this.getInstance().getNbCities())*Instances.get(i).getNbCities());
+		sol[i] = initialisation.OPTMain((5500/this.getInstance().getNbCities())*Instances.get(i).getNbCities());
 	}
 	
 	//this.m_solution = sol[0];
-	this.m_solution = tsp.metaheuristic.Clustering.assemblage(sol, this.getInstance());
+	OPT solution = new OPT(this.m_instance, this.getTimeLimit());
+	this.m_solution =solution.OPTMain2(53000, tsp.metaheuristic.Clustering.assemblage(sol, this.getInstance()));
 	
 	
 	this.m_solution.evaluate();

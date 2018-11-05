@@ -437,6 +437,7 @@ public Solution OPTMain2(long dureeMs,Solution Init) throws Exception {
 		int indice;
 		while (trajet[edge.length-1] == -1 && iteration<edge.length) {
 			indice = 0;
+			
 			while(edge[present][indice]== 0 || indice==prec) {
 				indice++;
 			}

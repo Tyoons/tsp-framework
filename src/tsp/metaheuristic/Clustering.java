@@ -206,6 +206,9 @@ public static void ajouter(Instance inst, Instance groupe, int indice) throws Ex
  * @throws Exception
  */
 public static ArrayList<Instance> reduction(Instance inst) throws Exception{
+	double ratio_X = inst.getMinX()/ inst.getMaxX();
+	double ratio_Y = inst.getMinY() / inst.getMaxY();
+	double ratio = (ratio_X + ratio_Y) ;
 	ArrayList<Instance> listeInstance = new ArrayList<Instance>();
 	listeInstance.add(new Instance(inst.getFileName(), inst.getType()));
 	//System.out.println(listeInstance.get(0).getLabel(0) + " label en 0");
@@ -219,7 +222,7 @@ public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 		for(int j =i+1;j<n;j++) {
 			
 				for(int k =0; k< indexes.size();k++){
-					if(listeInstance.get(0).getDistances(Integer.parseInt(indexes.get(k)),j)< dmoy/5) {
+					if(listeInstance.get(0).getDistances(Integer.parseInt(indexes.get(k)),j)< dmoy*ratio) {
 
 
 						if(!indexes.contains(listeInstance.get(0).getLabel(j)) &&  Integer.parseInt(listeInstance.get(0).getLabel(j)) <n ){
@@ -230,7 +233,7 @@ public static ArrayList<Instance> reduction(Instance inst) throws Exception{
 				}
 			
 			
-			if(listeInstance.get(0).getDistances(i, j) < dmoy/5 && !indexes.contains(listeInstance.get(0).getLabel(j))  &&  Integer.parseInt(listeInstance.get(0).getLabel(j)) <n ) {
+			if(listeInstance.get(0).getDistances(i, j) < dmoy*ratio && !indexes.contains(listeInstance.get(0).getLabel(j))  &&  Integer.parseInt(listeInstance.get(0).getLabel(j)) <n ) {
 				indexes.add(listeInstance.get(0).getLabel(j));
 				ajout = true;
 				
