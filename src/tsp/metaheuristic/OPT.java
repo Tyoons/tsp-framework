@@ -343,7 +343,6 @@ public class OPT extends TSPSolver {
 	public Solution OPTMain(long dureeMs) throws Exception {
 		
 		int[][] matriceEdge = this.getInitOpt();
-		
 		long startTime = System.currentTimeMillis();
 		long spentTime = 0;
 		int nbIterations = 0;
