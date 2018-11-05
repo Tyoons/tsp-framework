@@ -109,23 +109,23 @@ public class NearestInsertion extends TSPSolver{
 		for(int k=0;k<liste.size()-1;k++) {
 			int i=liste.get(k);
 			int j=liste.get(k+1);
-			if(Distances[i][r]+Distances[r][j]-Distances[i][j]<min) { //
-				min=Distances[i][r]+Distances[r][j]-Distances[i][j];
+			if(Distances[i][r]+Distances[r][j]-Distances[i][j]<min) { //Trouver le minimum de la somme des arcs (i,r) et (r,j) moins l'arc (i,j)
+				min=Distances[i][r]+Distances[r][j]-Distances[i][j]; //Actualiser le minimum
 				PointInsertion=i;
 			}
 		}
 		return PointInsertion;		
 	}
 	
-
-	
-
-	
+	/**
+	 * Solution en insérant la ville la plus proche dans le Tour
+	 * @return La solution de l'instance 
+	 */
 	public Solution Nearest() throws Exception {
 		Initialisation();
 		int i=3;
 		while(i<=(this.getInstance().getNbCities())) {
-			int NoeudSuivant=this.Min(Tour, VillesPasEncoreVisitées);
+			int NoeudSuivant=this.Min(Tour, VillesPasEncoreVisitées); //Ville à ajouter
 			VillesPasEncoreVisitées.remove(VillesPasEncoreVisitées.indexOf(NoeudSuivant));
 			int Point=this.InsertionArc(this.Tour, NoeudSuivant);
 			int indice=this.Tour.indexOf(Point);
@@ -133,7 +133,7 @@ public class NearestInsertion extends TSPSolver{
 			i++;
 		}
 		
-		Solution sol=new Solution(this.getInstance());
+		Solution sol=new Solution(this.getInstance()); //Création de la solution avec le Tour final
 		for(int k=0;k<this.Tour.size()-1;k++) {
 			sol.setCityPosition(this.Tour.get(k), k);
 		}
