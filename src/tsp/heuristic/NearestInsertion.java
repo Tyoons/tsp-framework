@@ -164,7 +164,7 @@ public class NearestInsertion extends TSPSolver{
 				while(continuer && j<this.getInstance().getNbCities()) {
 					TourOpt.add(j, Point); //Insertion de la ville i à l'emplacement j
 					if(this.Evaluate(TourOpt)<=valeuropt) {
-						continuer=false; //Amélioration du Tour, on concerve 
+						continuer=false; //Amélioration du Tour, on concerve le changement
 						OptimisationPossible=true;
 					}
 					else {
@@ -176,7 +176,7 @@ public class NearestInsertion extends TSPSolver{
 			}
 			boucle++;
 		}
-		for(int l=0;l<TourOpt.size()-1;l++) {
+		for(int l=0;l<TourOpt.size()-1;l++) { //Création de la solution
 			solution.setCityPosition(TourOpt.get(l), l);
 		}
 		return solution;
