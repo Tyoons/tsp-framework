@@ -2,7 +2,11 @@ package tsp.metaheuristic;
 
 import tsp.Instance;
 import tsp.TSPSolver;
-
+/**
+ * Cette classe permet aux fourmis 
+ * @author Valentin
+ *
+ */
 public class Environnement extends TSPSolver{
 	
 	public double[][] pheromones;
